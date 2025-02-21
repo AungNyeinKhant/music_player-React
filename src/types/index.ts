@@ -1,11 +1,18 @@
-export interface Track {
+export type Track = {
   id: string;
   title: string;
   artist: string;
   cover: string;
 }
 
-export interface PlaylistCard {
+export type TrendingTrack = {
+  title: string;
+  artist: string;
+  duration: string;
+  cover: string;
+}
+
+export type PlaylistCard = {
   id: string;
   title: string;
   description: string;
@@ -14,7 +21,12 @@ export interface PlaylistCard {
   duration?: string;
 }
 
-export interface SidebarItem {
+export type Playlist = {
+  id: string;
+  name: string;
+}
+
+export type SidebarItem = {
   icon: React.ReactNode;
   label: string;
   path: string;
