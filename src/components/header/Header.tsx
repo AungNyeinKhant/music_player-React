@@ -1,37 +1,38 @@
-import React from "react";
-import { Menu, Search, Bell } from "lucide-react";
+import { FC } from "react";
+import { Search } from "lucide-react";
 
 interface HeaderProps {
   onMenuClick: () => void;
 }
 
-const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
+const Header: FC<HeaderProps> = ({ onMenuClick }) => {
   return (
-    <header className='bg-black sticky top-0 z-50'>
-      <div className='flex items-center justify-between p-4'>
-        <button
-          onClick={onMenuClick}
-          className='p-2 hover:bg-[#282828] rounded-lg md:hidden'
-        >
-          <Menu className='w-6 h-6 text-gray-400 hover:text-primaryText' />
-        </button>
-
-        <div className='flex-1 mx-4'>
-          <div className='relative max-w-md'>
-            <Search className='w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2' />
-            <input
-              type='text'
-              placeholder='Search for songs, artists...'
-              className='w-full pl-10 pr-4 py-2 bg-[#242424] text-primaryText rounded-full focus:outline-none focus:ring-2 focus:ring-secondary'
-            />
-          </div>
-        </div>
-
-        <button className='p-2 hover:bg-[#282828] rounded-lg'>
-          <Bell className='w-6 h-6 text-gray-400 hover:text-primaryText' />
-        </button>
+    <div className='flex items-center justify-between p-4 sticky top-0 bg-black/90 backdrop-blur-md z-50'>
+      <button
+        onClick={onMenuClick}
+        className='text-secondary font-bold text-xl mr-4 hover:text-gray-300 transition-colors md:hidden'
+      >
+        Legacy
+      </button>
+      <div className='flex items-center bg-[#282828] rounded-full px-4 py-2 w-full max-w-[400px] mx-2'>
+        <Search className='w-5 h-5 text-gray-400 min-w-[20px]' />
+        <input
+          type='text'
+          placeholder='Search music, albums, artists...'
+          className='bg-transparent border-none outline-none text-primaryText ml-2 w-full text-sm'
+        />
       </div>
-    </header>
+      <div className='flex items-center'>
+        <div className='flex items-center bg-[#282828] rounded-full p-1 cursor-pointer'>
+          <img
+            src='https://github.com/shadcn.png'
+            alt='User'
+            className='w-8 h-8 rounded-full'
+          />
+          <span className='text-primaryText mx-2 hidden sm:block'>Taylor</span>
+        </div>
+      </div>
+    </div>
   );
 };
 

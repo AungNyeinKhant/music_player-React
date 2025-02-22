@@ -1,4 +1,4 @@
-import React from "react";
+import { FC } from "react";
 import MusicCard from "../components/cards/MusicCard";
 import PlaylistCard from "../components/cards/PlaylistCard";
 import {
@@ -7,7 +7,7 @@ import {
   TrendingTrack,
 } from "../types";
 import { Play, SkipBack } from "lucide-react";
-const Home: React.FC = () => {
+const Home: FC = () => {
   const recentlyPlayed: Track[] = [
     {
       id: "1",
@@ -102,21 +102,23 @@ const Home: React.FC = () => {
 
   return (
     <div className='flex-1 bg-gradient-to-b from-gray-900 to-black p-8 overflow-auto pb-28'>
-      <div className='mb-8'>
+      <section className='mb-8'>
         <div className='flex items-center justify-between mb-4'>
-          <h2 className='text-2xl font-bold text-primaryText'>
-            Recently plays
-          </h2>
-          <a href='#' className='text-sm text-gray-400 hover:text-primaryText'>
+          <h2 className='text-primaryText text-xl font-bold'>Recently plays</h2>
+          <a href='#' className='text-gray-400 text-sm hover:text-primaryText'>
             See all
           </a>
         </div>
-        <div className='grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4'>
-          {recentlyPlayed.map((track) => (
-            <MusicCard key={track.id} track={track} />
-          ))}
+        <div className='relative w-full'>
+          <div className='flex gap-4 overflow-x-auto snap-x snap-mandatory scrollbar-hide'>
+            {recentlyPlayed.map((track) => (
+              <div key={track.id} className='flex-none snap-start'>
+                <MusicCard track={track} />
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
+      </section>
 
       <div className='mb-8'>
         <h2 className='text-2xl font-bold text-primaryText mb-4'>Trending</h2>
@@ -142,7 +144,7 @@ const Home: React.FC = () => {
                 {track.duration}
               </span>
               <button className='w-8 h-8 rounded-full bg-secondary items-center justify-center hidden group-hover:flex'>
-                <Play className='w-4 h-4 text-primaryText' />
+                <Play className='w-4 h-4 text-primary' />
               </button>
             </div>
           ))}
