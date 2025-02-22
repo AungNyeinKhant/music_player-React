@@ -109,10 +109,10 @@ const Home: FC = () => {
             See all
           </a>
         </div>
-        <div className='relative'>
-          <div className='flex gap-4 overflow-x-auto md:grid md:grid-cols-2 lg:grid-cols-4 scrollbar-hide'>
+        <div className='relative w-full'>
+          <div className='flex gap-4 overflow-x-auto snap-x snap-mandatory scrollbar-hide'>
             {recentlyPlayed.map((track) => (
-              <div key={track.id} className='flex-none w-48 md:w-auto'>
+              <div key={track.id} className='flex-none snap-start'>
                 <MusicCard track={track} />
               </div>
             ))}
@@ -144,7 +144,7 @@ const Home: FC = () => {
                 {track.duration}
               </span>
               <button className='w-8 h-8 rounded-full bg-secondary items-center justify-center hidden group-hover:flex'>
-                <Play className='w-4 h-4 text-primaryText' />
+                <Play className='w-4 h-4 text-primary' />
               </button>
             </div>
           ))}
