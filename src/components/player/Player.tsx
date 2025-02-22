@@ -1,4 +1,4 @@
-import React from "react";
+import { FC } from "react";
 import {
   Play,
   SkipBack,
@@ -8,9 +8,9 @@ import {
   Volume2,
 } from "lucide-react";
 
-const Player: React.FC = () => {
+const Player: FC = () => {
   return (
-    <div className='fixed bottom-0 left-0 right-0 bg-[#181818] border-t border-[#282828] p-4'>
+    <div className='fixed bottom-0 left-0 right-0 bg-[#181818] border-t border-[#282828] p-4 z-50'>
       <div className='flex justify-between items-center max-w-screen-xl mx-auto'>
         <div className='flex items-center w-[30%]'>
           <img

@@ -1,4 +1,4 @@
-import React from "react";
+import { FC } from "react";
 import { Track } from "../../types";
 
 type MusicCardProps = {
@@ -6,7 +6,7 @@ type MusicCardProps = {
   size?: "small" | "medium" | "large";
 }
 
-const MusicCard: React.FC<MusicCardProps> = ({ track, size = "medium" }) => {
+const MusicCard: FC<MusicCardProps> = ({ track, size = "medium" }) => {
   const sizeClasses = {
     small: "w-32 h-32",
     medium: "w-48 h-48",
