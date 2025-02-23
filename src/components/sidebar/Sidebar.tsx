@@ -9,7 +9,7 @@ import {
   X,
   Plus,
 } from "lucide-react";
-import { SidebarItem, Playlist } from "../../types";
+import { SidebarItem, Playlist } from "../../types/index";
 
 interface SidebarProps {
   isOpen: boolean;
