@@ -1,20 +1,10 @@
 import { FC } from "react";
 import { Search } from "lucide-react";
 
-interface HeaderProps {
-  onMenuClick: () => void;
-}
-
-const Header: FC<HeaderProps> = ({ onMenuClick }) => {
+const Header: FC = () => {
   return (
     <div className='flex items-center justify-between p-4 sticky top-0 bg-black/90 backdrop-blur-md z-50'>
-      <button
-        onClick={onMenuClick}
-        className='text-secondary font-bold text-xl mr-4 hover:text-gray-300 transition-colors md:hidden'
-      >
-        Legacy
-      </button>
-      <div className='flex items-center bg-[#282828] rounded-full px-4 py-2 w-full max-w-[400px] mx-2'>
+      <div className='flex items-center flex-1'>
         <Search className='w-5 h-5 text-gray-400 min-w-[20px]' />
         <input
           type='text'
