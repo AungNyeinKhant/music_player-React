@@ -103,7 +103,7 @@ const Home: FC = () => {
 
   return (
     <Template>
-      <div className='flex-1 bg-gradient-to-b from-gray-900 to-black p-8 overflow-auto pb-28'>
+      <div className='flex-1 bg-gradient-to-b from-primary to-black p-8 overflow-auto pb-28'>
         <section className='mb-8'>
           <div className='flex items-center justify-between mb-4'>
             <h2 className='text-primaryText text-xl font-bold'>

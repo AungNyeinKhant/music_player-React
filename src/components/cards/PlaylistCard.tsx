@@ -3,7 +3,7 @@ import { PlaylistCard as PlaylistCardType } from "../../types";
 
 type PlaylistCardProps = {
   playlist: PlaylistCardType;
-}
+};
 
 const PlaylistCard: FC<PlaylistCardProps> = ({ playlist }) => {
   return (

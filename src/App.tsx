@@ -1,10 +1,11 @@
 import { FC } from "react";
-import Home from "./pages/customer/Home";
+
+import AppRoutes from "./routes/customer/AppRoutes";
 
 const App: FC = () => {
   return (
     <>
-      <Home />
+      <AppRoutes />
     </>
   );
 };

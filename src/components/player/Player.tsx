@@ -70,7 +70,7 @@ const Player: FC = () => {
     return `${minutes}:${seconds.toString().padStart(2, "0")}`;
   };
   return (
-    <div className='fixed bottom-0 left-0 right-0 bg-[#181818] border-t border-[#282828] p-4 z-50'>
+    <div className='fixed bottom-0 left-0 right-0 bg-primary border-t border-[#282828] p-4 z-50'>
       <div className='flex justify-between items-center max-w-screen-xl mx-auto'>
         <div className='flex items-center w-[30%]'>
           <img

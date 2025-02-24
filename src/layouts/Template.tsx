@@ -17,11 +17,11 @@ const Template: FC<TemplateProps> = ({ children }) => {
   };
 
   return (
-    <div className='flex h-screen bg-black text-white'>
+    <div className='flex h-screen bg-primaryDark text-white'>
       <Sidebar isOpen={isSidebarOpen} onClose={closeSidebar} />
       <div className='flex-1 flex flex-col overflow-hidden'>
         <Header onSidebarOpen={toggleSidebar} />
-        
+
         {children}
         <Player />
       </div>
