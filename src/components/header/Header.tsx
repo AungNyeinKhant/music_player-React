@@ -1,20 +1,9 @@
 import { FC } from "react";
 import { Search } from "lucide-react";
 
-interface HeaderProps {
-  onSidebarOpen: () => void;
-}
-
-const Header: FC<HeaderProps> = ({ onSidebarOpen }) => {
+const Header: React.FC = () => {
   return (
     <div className='flex items-center justify-between p-4 bg-primaryDark'>
-      {/* Clickable Logo */}
-      <button
-        onClick={onSidebarOpen}
-        className='text-secondary text-xl font-bold  items-center gap-2  md:hidden'
-      >
-        <span>Legacy</span>
-      </button>
 
       {/* Search Bar */}
       <div className='flex items-center flex-1 max-w-md mx-4'>

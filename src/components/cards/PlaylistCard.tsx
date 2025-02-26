@@ -7,7 +7,7 @@ type PlaylistCardProps = {
 
 const PlaylistCard: FC<PlaylistCardProps> = ({ playlist }) => {
   return (
-    <div className='bg-gray-900 rounded-lg p-4 hover:bg-gray-800 transition-colors'>
+    <div className='bg-primaryDark rounded-lg p-4 hover:bg-gray-800 transition-colors'>
       <div className='relative aspect-square mb-4'>
         <img
           src={playlist.coverImage}
