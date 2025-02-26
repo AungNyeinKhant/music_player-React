@@ -1,9 +1,23 @@
 import { FC } from "react";
-import { Search } from "lucide-react";
+import { Search, Menu } from "lucide-react";
+import { Link } from "react-router-dom";
 
-const Header: React.FC = () => {
+type HeaderProps = {
+  onSidebarOpen: () => void;
+};
+
+const Header: FC<HeaderProps> = ({ onSidebarOpen }) => {
   return (
     <div className='flex items-center justify-between p-4 bg-primaryDark'>
+      {/* Mobile Logo and Menu */}
+      <div className='flex items-center md:hidden'>
+        <button
+          onClick={onSidebarOpen}
+          className='p-2 hover:bg-[#282828] rounded-full'
+        >
+          <span className='text-secondary text-xl font-bold'>Legacy</span>
+        </button>
+      </div>
 
       {/* Search Bar */}
       <div className='flex items-center flex-1 max-w-md mx-4'>
