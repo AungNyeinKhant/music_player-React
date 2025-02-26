@@ -18,23 +18,31 @@ interface SidebarProps {
 
 const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
   const menuItems: SidebarItem[] = [
-    { icon: <Home className='w-6 h-6' />, label: "Home", path: "/" },
+    { icon: <Home className='w-6 h-6' />, label: "Home", path: "/app" },
     {
       icon: <LayoutGrid className='w-6 h-6' />,
       label: "Genres",
-      path: "/genres",
+      path: "/app/genres",
     },
-    { icon: <Users className='w-6 h-6' />, label: "Artists", path: "/artists" },
-    { icon: <Library className='w-6 h-6' />, label: "Albums", path: "/albums" },
+    {
+      icon: <Users className='w-6 h-6' />,
+      label: "Artists",
+      path: "/app/artists",
+    },
+    {
+      icon: <Library className='w-6 h-6' />,
+      label: "Albums",
+      path: "/app/albums",
+    },
     {
       icon: <Heart className='w-6 h-6' />,
       label: "Favorites",
-      path: "/favorites",
+      path: "/app/favorites",
     },
     {
       icon: <Clock className='w-6 h-6' />,
       label: "Recently Plays",
-      path: "/recent",
+      path: "/app/recent",
     },
   ];
 
@@ -79,7 +87,9 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
               <a
                 key={item.path}
                 href={item.path}
-                className='flex items-center text-gray-400 hover:text-secondary py-2'
+                className={`flex items-center text-gray-400 hover:text-secondary py-2 ${
+                  window.location.pathname === item.path ? "text-secondary" : ""
+                }`}
               >
                 {item.icon}
                 <span className='ml-4'>{item.label}</span>
