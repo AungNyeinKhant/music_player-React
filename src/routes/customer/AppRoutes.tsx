@@ -8,6 +8,7 @@ import Artists from "../../pages/customer/Artists";
 import Albums from "../../pages/customer/Albums";
 import Favourates from "../../pages/customer/Favourates";
 import RecentlyPlays from "../../pages/customer/RecentlyPlays";
+import ArtistDetail from "../../pages/customer/ArtistDetail";
 
 const AppRoutes: FC = () => {
   return (
@@ -22,6 +23,7 @@ const AppRoutes: FC = () => {
                 <Route index path='/' element={<Home />} />
                 <Route path='/genres' element={<Genres />} />
                 <Route path='/artists' element={<Artists />} />
+                <Route path='/artist-detail' element={<ArtistDetail />} />
                 <Route path='/albums' element={<Albums />} />
                 <Route path='/favorites' element={<Favourates />} />
                 <Route path='/recent' element={<RecentlyPlays />} />
