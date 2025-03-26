@@ -150,7 +150,7 @@ const Home: FC = () => {
                 <span className='text-gray-400 text-sm mr-4'>
                   {track.duration}
                 </span>
-                <button className='w-8 h-8 rounded-full bg-secondary items-center justify-center hidden group-hover:flex'>
+                <button className='w-8 h-8 rounded-full bg-secondary items-center justify-center flex'>
                   <Play className='w-4 h-4 text-primary' />
                 </button>
               </div>
