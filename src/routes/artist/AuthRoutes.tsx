@@ -1,7 +1,7 @@
 import { FC } from "react";
 import { Routes, Route } from "react-router-dom";
-import Login from "../../pages/customer/auth/Login";
-import Register from "../../pages/customer/auth/Register";
+import Login from "../../pages/artist/auth/Login";
+import Register from "../../pages/artist/auth/Register";
 
 const ArtistAuthRoutes: FC = () => {
   return (

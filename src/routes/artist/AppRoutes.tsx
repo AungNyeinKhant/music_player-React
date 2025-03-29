@@ -15,7 +15,7 @@ const ArtistAppRoutes: FC = () => {
   return (
     <Router>
       <Routes>
-        {/* <Route path='/auth/*' element={<AuthRoutes />} /> */}
+        <Route path='/artist/auth/*' element={<AuthRoutes />} />
         <Route
           path='/artist/*'
           element={
