@@ -4,7 +4,7 @@ import { AuthContextType, UserAuth } from "../types";
 export const AuthContext = createContext<AuthContextType | null>(null);
 
 export default function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<UserAuth | null>(null);
+  const [user, setUser] = useState<UserAuth | null>({ id: "1", role: "user" });
 
   // Create value object
   const value: AuthContextType = {

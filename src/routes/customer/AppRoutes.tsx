@@ -14,7 +14,7 @@ const AppRoutes: FC = () => {
   return (
     <Router>
       <Routes>
-        <Route path='/auth/*' element={<AuthRoutes />} />
+        <Route path='/*' element={<AuthRoutes />} />
         <Route
           path='/app/*'
           element={
