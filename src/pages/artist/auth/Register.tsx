@@ -140,7 +140,7 @@ const Register: FC = () => {
   };
 
   return (
-    <div className='min-h-screen flex items-center justify-center bg-primary py-16'>
+    <div className='min-h-screen flex items-center justify-center bg-primary py-16 px-8'>
       <div className='bg-primaryDark p-10 rounded-lg shadow-lg w-full max-w-2xl'>
         <h2 className='text-2xl font-bold mb-6 text-primaryText text-center'>
           Artist Registration
@@ -160,7 +160,7 @@ const Register: FC = () => {
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               value={formik.values.name}
-              className='w-full px-4 py-2 rounded bg-primary text-primaryText border border-gray-700 focus:outline-none focus:ring-2 focus:ring-secondary'
+              className='w-full px-4 py-2 rounded bg-primary text-primaryText border border-gray-700 focus:outline-none focus:ring-2 focus:ring-dashboard-secondary'
             />
             {formik.touched.name && formik.errors.name ? (
               <div className='text-red-500 mt-1 text-sm'>
@@ -182,7 +182,7 @@ const Register: FC = () => {
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               value={formik.values.email}
-              className='w-full px-4 py-2 rounded bg-primary text-primaryText border border-gray-700 focus:outline-none focus:ring-2 focus:ring-secondary'
+              className='w-full px-4 py-2 rounded bg-primary text-primaryText border border-gray-700 focus:outline-none focus:ring-2 focus:ring-dashboard-secondary'
             />
             {formik.touched.email && formik.errors.email ? (
               <div className='text-red-500 mt-1 text-sm'>
@@ -204,7 +204,7 @@ const Register: FC = () => {
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               value={formik.values.phone}
-              className='w-full px-4 py-2 rounded bg-primary text-primaryText border border-gray-700 focus:outline-none focus:ring-2 focus:ring-secondary'
+              className='w-full px-4 py-2 rounded bg-primary text-primaryText border border-gray-700 focus:outline-none focus:ring-2 focus:ring-dashboard-secondary'
             />
             {formik.touched.phone && formik.errors.phone ? (
               <div className='text-red-500 mt-1 text-sm'>
@@ -227,7 +227,7 @@ const Register: FC = () => {
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 value={formik.values.password}
-                className='w-full px-4 py-2 rounded bg-primary text-primaryText border border-gray-700 focus:outline-none focus:ring-2 focus:ring-secondary'
+                className='w-full px-4 py-2 rounded bg-primary text-primaryText border border-gray-700 focus:outline-none focus:ring-2 focus:ring-dashboard-secondary'
               />
               <button
                 type='button'
@@ -411,7 +411,7 @@ const Register: FC = () => {
           <div>
             <button
               type='submit'
-              className='w-full bg-secondary hover:bg-opacity-90 text-white font-medium py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-secondary transition duration-150 ease-in-out'
+              className='w-full bg-dashboard-secondary hover:bg-opacity-90 text-white font-medium py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-dashboard-secondary transition duration-150 ease-in-out'
             >
               Register
             </button>
@@ -424,7 +424,7 @@ const Register: FC = () => {
           </span>
           <a
             href='/artist/auth/login'
-            className='text-secondary hover:text-opacity-90'
+            className='text-dashboard-secondary hover:text-opacity-90'
           >
             Sign In
           </a>

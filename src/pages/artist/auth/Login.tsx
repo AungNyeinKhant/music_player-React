@@ -52,7 +52,7 @@ const Login: FC = () => {
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               value={formik.values.email}
-              className='w-full px-4 py-2 rounded bg-primary text-primaryText border border-gray-700 focus:outline-none focus:ring-2 focus:ring-secondary'
+              className='w-full px-4 py-2 rounded bg-primary text-primaryText border border-gray-700 focus:outline-none focus:ring-2 focus:ring-dashboard-secondary'
             />
             {formik.touched.email && formik.errors.email ? (
               <div className='text-red-500 mt-1 text-sm'>
@@ -74,7 +74,7 @@ const Login: FC = () => {
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 value={formik.values.password}
-                className='w-full px-4 py-2 rounded bg-primary text-primaryText border border-gray-700 focus:outline-none focus:ring-2 focus:ring-secondary'
+                className='w-full px-4 py-2 rounded bg-primary text-primaryText border border-gray-700 focus:outline-none focus:ring-2 focus:ring-dashboard-secondary'
               />
               <button
                 type='button'
@@ -94,7 +94,7 @@ const Login: FC = () => {
           <div>
             <button
               type='submit'
-              className='w-full bg-secondary hover:bg-opacity-90 text-white font-medium py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-secondary transition duration-150 ease-in-out'
+              className='w-full bg-dashboard-secondary hover:bg-opacity-90 text-white font-medium py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-dashboard-secondary transition duration-150 ease-in-out'
             >
               Sign In
             </button>
@@ -102,7 +102,10 @@ const Login: FC = () => {
         </form>
 
         <div className='mt-4 text-center'>
-          <a href='#' className='text-primaryDarkText hover:text-secondary'>
+          <a
+            href='#'
+            className='text-primaryDarkText hover:text-dashboard-secondary'
+          >
             Forgot your password?
           </a>
         </div>
