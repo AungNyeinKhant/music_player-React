@@ -17,6 +17,9 @@ const Header: FC<HeaderProps> = ({ onSidebarOpen }) => {
         >
           <span className='text-secondary text-xl font-bold'>Legacy</span>
         </button>
+        <Link to='/' className='ml-2'>
+          <img src='/logo.png' alt='Logo' className='h-8' />
+        </Link>
       </div>
 
       {/* Search Bar */}

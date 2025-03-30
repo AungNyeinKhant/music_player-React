@@ -2,9 +2,16 @@ import { FC, useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { Eye, EyeOff } from "lucide-react";
+import { artistLogin } from "../../../services/AuthService";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../../context/AuthContext";
 
 const Login: FC = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
+  const auth = useAuth();
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -25,10 +32,27 @@ const Login: FC = () => {
       password: "",
     },
     validationSchema: loginSchema,
-    onSubmit: (values) => {
-      console.log("Login values:", values);
-      // Here you would typically call your auth service
-      // Example: AuthService.login(values.email, values.password)
+    onSubmit: async (values) => {
+      setError(null);
+      setIsLoading(true);
+      console.log("Login Form Data:", values);
+      try {
+        const response = await artistLogin(values.email, values.password);
+
+        auth?.setUser({
+          id: response?.data?.data?.user.id,
+          role: "artist",
+          refreshToken: response?.data?.data?.refreshToken,
+        });
+
+        navigate("/artist");
+        // Handle successful login here (e.g., store token, redirect)
+      } catch (err) {
+        console.error("Login failed:", err);
+        setError("Invalid email or password");
+      } finally {
+        setIsLoading(false);
+      }
     },
   });
 
@@ -94,11 +118,15 @@ const Login: FC = () => {
           <div>
             <button
               type='submit'
-              className='w-full bg-dashboard-secondary hover:bg-opacity-90 text-white font-medium py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-dashboard-secondary transition duration-150 ease-in-out'
+              disabled={isLoading}
+              className='w-full bg-dashboard-secondary hover:bg-opacity-90 text-white font-medium py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-dashboard-secondary transition duration-150 ease-in-out disabled:opacity-50'
             >
-              Sign In
+              {isLoading ? "Signing in..." : "Sign In"}
             </button>
           </div>
+          {error && (
+            <div className='text-red-500 text-sm text-center'>{error}</div>
+          )}
         </form>
 
         <div className='mt-4 text-center'>

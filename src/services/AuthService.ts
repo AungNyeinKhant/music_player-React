@@ -1,5 +1,8 @@
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 import { adminAPI, artistAPI, userAPI } from "./httpService";
 //========================= user =========================
+
 export const userLogin = async (email: string, password: string) => {
   try {
     const response = await userAPI.post("/login", {
@@ -45,11 +48,13 @@ export const userRegister = async (userData: {
 //========================= artist ================
 export const artistLogin = async (email: string, password: string) => {
   try {
-    const response = await artistAPI.post("/login", {
+    const response: any = await artistAPI.post("/auth/login", {
       email,
       password,
     });
-    console.log("artistLogin response:", response);
+    artistAPI.defaults.headers.common[
+      "Authorization"
+    ] = `Bearer ${response?.data?.data?.accessToken}`;
     return response;
   } catch (error) {
     console.error("artistLogin error:", error);
