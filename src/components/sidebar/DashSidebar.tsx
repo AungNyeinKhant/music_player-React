@@ -1,8 +1,10 @@
-import { FC, ReactNode } from "react";
+import { FC } from "react";
 import { LayoutDashboard, Music, Album } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 const DashSidebar: FC<{ isSidebarOpen: boolean }> = ({ isSidebarOpen }) => {
+  const location = useLocation();
+
   return (
     <aside
       className={`fixed md:static w-64 h-screen top-0 bg-dashboard-primaryDark transform transition-transform duration-300 ease-in-out z-50 ${
@@ -19,7 +21,11 @@ const DashSidebar: FC<{ isSidebarOpen: boolean }> = ({ isSidebarOpen }) => {
           <li>
             <Link
               to='/artist'
-              className='flex items-center p-3 rounded-md bg-dashboard-primary text-dashboard-primaryText'
+              className={`flex items-center p-3 rounded-md ${
+                location.pathname === "/artist"
+                  ? "bg-dashboard-primary text-dashboard-primaryText"
+                  : "hover:bg-dashboard-primary text-dashboard-primaryDarkText"
+              }`}
             >
               <LayoutDashboard
                 size={20}
@@ -31,18 +37,40 @@ const DashSidebar: FC<{ isSidebarOpen: boolean }> = ({ isSidebarOpen }) => {
           <li>
             <Link
               to='/artist/albums'
-              className='flex items-center p-3 rounded-md hover:bg-dashboard-primary text-dashboard-primaryDarkText'
+              className={`flex items-center p-3 rounded-md ${
+                location.pathname === "/artist/albums"
+                  ? "bg-dashboard-primary text-dashboard-primaryText"
+                  : "hover:bg-dashboard-primary text-dashboard-primaryDarkText"
+              }`}
             >
-              <Album size={20} className='mr-3' />
+              <Album
+                size={20}
+                className={`mr-3 ${
+                  location.pathname === "/artist/albums"
+                    ? "text-dashboard-secondary"
+                    : ""
+                }`}
+              />
               Albums
             </Link>
           </li>
           <li>
             <Link
               to='/artist/tracks'
-              className='flex items-center p-3 rounded-md hover:bg-dashboard-primary text-dashboard-primaryDarkText'
+              className={`flex items-center p-3 rounded-md ${
+                location.pathname === "/artist/tracks"
+                  ? "bg-dashboard-primary text-dashboard-primaryText"
+                  : "hover:bg-dashboard-primary text-dashboard-primaryDarkText"
+              }`}
             >
-              <Music size={20} className='mr-3' />
+              <Music
+                size={20}
+                className={`mr-3 ${
+                  location.pathname === "/artist/tracks"
+                    ? "text-dashboard-secondary"
+                    : ""
+                }`}
+              />
               Tracks
             </Link>
           </li>
