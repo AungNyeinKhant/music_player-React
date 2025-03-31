@@ -7,7 +7,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<UserAuth | null>({
     id: "1",
     role: "user",
-    refreshToken: "123",
+    accessToken: "123",
   });
 
   // Create value object

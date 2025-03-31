@@ -5,6 +5,7 @@ import { Eye, EyeOff } from "lucide-react";
 import { artistLogin } from "../../../services/AuthService";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../../context/AuthContext";
+import { storeRefreshToken } from "../../../utils/crypto";
 
 const Login: FC = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -39,10 +40,12 @@ const Login: FC = () => {
       try {
         const response = await artistLogin(values.email, values.password);
 
+        storeRefreshToken(response?.data?.data?.refreshToken);
+
         auth?.setUser({
           id: response?.data?.data?.user.id,
           role: "artist",
-          refreshToken: response?.data?.data?.refreshToken,
+          accessToken: response?.data?.data?.accessToken,
         });
 
         navigate("/artist");
@@ -128,15 +131,6 @@ const Login: FC = () => {
             <div className='text-red-500 text-sm text-center'>{error}</div>
           )}
         </form>
-
-        <div className='mt-4 text-center'>
-          <a
-            href='#'
-            className='text-primaryDarkText hover:text-dashboard-secondary'
-          >
-            Forgot your password?
-          </a>
-        </div>
       </div>
     </div>
   );
