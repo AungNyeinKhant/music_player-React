@@ -1,7 +1,7 @@
 import CryptoJS from "crypto-js";
 
 // Secret key for encryption (in production, use a more secure approach for managing this key)
-const SECRET_KEY: string = "E#s&=IhN=(wE7eJ(1pd[broR09vz9{rv";
+const SECRET_KEY: string = "fca45251-df80-4429-be57-f871e74a1d86";
 
 // Function to encrypt and store refresh token
 const storeRefreshToken = (refreshToken: string): boolean => {

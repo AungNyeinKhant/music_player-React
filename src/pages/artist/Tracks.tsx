@@ -2,6 +2,8 @@ import { FC, useState } from "react";
 import Dashboard from "../../layouts/Dashboard";
 import { Plus, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
+import Modal from "../../components/modal/Modal";
+import CreateTrack from "./form/CreateTrack";
 
 interface Track {
   id: string;
@@ -18,6 +20,7 @@ interface Album {
 
 const Tracks: FC = () => {
   const [selectedAlbum, setSelectedAlbum] = useState<string>("");
+  const [showModal, setShowModal] = useState(false);
   const [tracks, setTracks] = useState<Track[]>([
     {
       id: "1",
@@ -94,9 +97,9 @@ const Tracks: FC = () => {
   ]);
 
   const [albums] = useState<Album[]>([
-    { id: "1", name: "Summer Collection" },
-    { id: "2", name: "Winter Beats" },
-    { id: "3", name: "Spring Melodies" },
+    { id: "67de5b0a1c15745e62bb4fef", name: "Summer Collection" },
+    { id: "67ec292b4d2f3913c6c875b4", name: "Winter Beats" },
+    { id: "67ec29cc4d2f3913c6c875b5", name: "Spring Melodies" },
   ]);
 
   const handleRowClick = (id: string) => {
@@ -139,18 +142,30 @@ const Tracks: FC = () => {
                 </option>
               ))}
             </select>
-            <Link
-              to={`/artist/tracks/create?albumId=${selectedAlbum}`}
+            <button
+              // to={`/artist/tracks/create?albumId=${selectedAlbum}`}
               className={`flex items-center gap-2 ${
                 selectedAlbum
                   ? "bg-dashboard-secondary"
                   : "bg-gray-500 cursor-not-allowed"
               } text-white px-4 py-2 rounded-md transition-colors`}
-              onClick={(e) => !selectedAlbum && e.preventDefault()}
+              onClick={(e) => {
+                e.preventDefault();
+                if (selectedAlbum) {
+                  setShowModal(true);
+                }
+              }}
             >
               <Plus size={18} />
               Create Track
-            </Link>
+            </button>
+            <Modal
+              title='Create Track'
+              showModal={showModal}
+              setShowModal={setShowModal}
+            >
+              <CreateTrack selectedAlbum={selectedAlbum} albums={albums} />
+            </Modal>
           </div>
         </div>
 

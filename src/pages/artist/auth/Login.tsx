@@ -36,20 +36,25 @@ const Login: FC = () => {
     onSubmit: async (values) => {
       setError(null);
       setIsLoading(true);
-      console.log("Login Form Data:", values);
+
       try {
         const response = await artistLogin(values.email, values.password);
+
+        if (response.status === 400) {
+          const errorMessage =
+            response?.data?.data?.error ?? "Something went wrong";
+          alert(errorMessage);
+          return;
+        }
 
         storeRefreshToken(response?.data?.data?.refreshToken);
 
         auth?.setUser({
           id: response?.data?.data?.user.id,
           role: "artist",
-          accessToken: response?.data?.data?.accessToken,
         });
 
         navigate("/artist");
-        // Handle successful login here (e.g., store token, redirect)
       } catch (err) {
         console.error("Login failed:", err);
         setError("Invalid email or password");

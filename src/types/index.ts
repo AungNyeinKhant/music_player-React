@@ -37,7 +37,6 @@ export type SidebarItem = {
 export type UserAuth = {
   id: string;
   role: string;
-  accessToken: string;
 };
 
 export type AuthContextType = {

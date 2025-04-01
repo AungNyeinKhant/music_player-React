@@ -1,5 +1,3 @@
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
 import { adminAPI, artistAPI, userAPI } from "./httpService";
 //========================= user =========================
 
@@ -81,12 +79,12 @@ export const artistRegister = async (artistData: {
       }
     });
 
-    const response = await artistAPI.post("/register", formData, {
+    const response = await artistAPI.post("/auth/register", formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
     });
-    console.log("artistRegister response:", response);
+
     return response;
   } catch (error) {
     console.error("artistRegister error:", error);
@@ -101,10 +99,10 @@ export const adminLogin = async (email: string, password: string) => {
       email,
       password,
     });
-    console.log("userLogin response:", response);
+    console.log("adminLogin response:", response);
     return response;
   } catch (error) {
-    console.error("userLogin error:", error);
+    console.error("adminLogin error:", error);
     throw error;
   }
 };

@@ -2,6 +2,10 @@ import { FC, useState, useRef } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { Eye, EyeOff, Calendar } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { artistRegister } from "../../../services/AuthService";
+import { storeRefreshToken } from "../../../utils/crypto";
+import { useAuth } from "../../../context/AuthContext";
 
 // Define a type for file inputs
 interface FileWithPreview extends File {
@@ -10,11 +14,15 @@ interface FileWithPreview extends File {
 
 const Register: FC = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const bgFileInputRef = useRef<HTMLInputElement>(null);
   const nrcFrontInputRef = useRef<HTMLInputElement>(null);
   const nrcBackInputRef = useRef<HTMLInputElement>(null);
   const dobInputRef = useRef<HTMLInputElement>(null);
+  const auth = useAuth();
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -25,7 +33,10 @@ const Register: FC = () => {
     "image/jpg",
     "image/jpeg",
     "image/png",
-    "image/gif",
+    "image/avif",
+    "image/svg+xml",
+    "image/tiff",
+    "image/webp",
   ];
   const FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
@@ -123,10 +134,48 @@ const Register: FC = () => {
       nrc_back: null,
     },
     validationSchema: registerSchema,
-    onSubmit: (values) => {
-      console.log("Register values:", values);
-      // Here you would typically call your auth service
-      // Example: AuthService.register(values)
+    onSubmit: async (values) => {
+      setError(null);
+      setIsLoading(true);
+      try {
+        if (!values.nrc_front) {
+          throw new Error("NRC Front or Passport image is required");
+        }
+        const formData = {
+          name: values.name,
+          email: values.email,
+          phone: values.phone,
+          password: values.password,
+          dob: values.dob,
+          image: values.image || undefined,
+          bg_image: values.bg_image || undefined,
+          nrc_front: values.nrc_front as File,
+          nrc_back: values.nrc_back || undefined,
+        };
+
+        const response: any = await artistRegister(formData);
+
+        if (response.status === 400) {
+          const errorMessage =
+            response?.data?.data?.error ?? "Something went wrong";
+          alert(errorMessage);
+          return;
+        }
+
+        storeRefreshToken(response?.data?.data?.refreshToken);
+
+        auth?.setUser({
+          id: response?.data?.data?.user.id,
+          role: "artist",
+        });
+
+        navigate("/artist");
+      } catch (err) {
+        console.error("Registration failed:", err);
+        setError("Registration failed. Please try again.");
+      } finally {
+        setIsLoading(false);
+      }
     },
   });
 
@@ -411,9 +460,10 @@ const Register: FC = () => {
           <div>
             <button
               type='submit'
-              className='w-full bg-dashboard-secondary hover:bg-opacity-90 text-white font-medium py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-dashboard-secondary transition duration-150 ease-in-out'
+              disabled={isLoading}
+              className='w-full bg-dashboard-secondary hover:bg-opacity-90 text-white font-medium py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-dashboard-secondary transition duration-150 ease-in-out disabled:opacity-50'
             >
-              Register
+              {isLoading ? "Registering..." : "Register"}
             </button>
           </div>
         </form>

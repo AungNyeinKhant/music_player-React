@@ -1,10 +1,19 @@
-import { FC, useRef } from "react";
+import { FC, useRef, useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import Dashboard from "../../layouts/Dashboard";
+import { createAlbum } from "../../services/albumService";
 
 // Define supported image formats
-const SUPPORTED_FORMATS = ["image/jpg", "image/jpeg", "image/png", "image/gif"];
+const SUPPORTED_FORMATS = [
+  "image/jpg",
+  "image/jpeg",
+  "image/png",
+  "image/avif",
+  "image/svg+xml",
+  "image/tiff",
+  "image/webp",
+];
 const FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
 const GENRES = [
@@ -62,6 +71,10 @@ const CreateAlbum: FC = () => {
       }),
   });
 
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+
   const formik = useFormik({
     initialValues: {
       name: "",
@@ -71,10 +84,30 @@ const CreateAlbum: FC = () => {
       bg_image: null,
     },
     validationSchema: albumSchema,
-    onSubmit: (values) => {
-      console.log("Album creation values:", values);
-      // Here you would typically call your album creation service
-      // Example: AlbumService.create(values)
+    onSubmit: async (values) => {
+      setIsLoading(true);
+      setError(null);
+      setSuccessMessage(null);
+
+      try {
+        const albumData = {
+          name: values.name,
+          description: values.description || "",
+          genre_id: values.genre,
+          image: values.image || undefined,
+          bg_image: values.bg_image || undefined,
+        };
+
+        const response = await createAlbum(albumData);
+
+        setSuccessMessage("Album created successfully!");
+        formik.resetForm();
+      } catch (err) {
+        console.error("Album creation failed:", err);
+        setError("Failed to create album. Please try again.");
+      } finally {
+        setIsLoading(false);
+      }
     },
   });
 
@@ -167,7 +200,7 @@ const CreateAlbum: FC = () => {
             >
               <option value=''>Select a genre</option>
               {GENRES.map((genre) => (
-                <option key={genre} value={genre}>
+                <option key={genre} value={"67d97afca68321d42e78f2ca"}>
                   {genre}
                 </option>
               ))}
@@ -252,12 +285,23 @@ const CreateAlbum: FC = () => {
           </div>
 
           <div>
-            <button
-              type='submit'
-              className='w-full bg-dashboard-secondary hover:bg-opacity-90 text-dashboard-primaryText font-medium py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-dashboard-secondary transition duration-150 ease-in-out'
-            >
-              Create Album
-            </button>
+            {error && (
+              <div className='text-red-500 text-center mb-4'>{error}</div>
+            )}
+            {successMessage && (
+              <div className='text-green-500 text-center mb-4'>
+                {successMessage}
+              </div>
+            )}
+            <div>
+              <button
+                type='submit'
+                disabled={isLoading}
+                className='w-full bg-dashboard-secondary hover:bg-opacity-90 text-dashboard-primaryText font-medium py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-dashboard-secondary transition duration-150 ease-in-out disabled:opacity-50'
+              >
+                {isLoading ? "Creating Album..." : "Create Album"}
+              </button>
+            </div>
           </div>
         </form>
       </div>
