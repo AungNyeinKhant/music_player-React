@@ -2,46 +2,14 @@ import { FC, useState } from "react";
 import Template from "../../layouts/Template";
 
 const genres = [
-  {
-    name: "Indie Mix",
-    image:
-      "https://images.unsplash.com/photo-1525362081669-2b476bb628c3?ixlib=rb-4.0.3",
-  },
-  {
-    name: "House Mix",
-    image:
-      "https://images.unsplash.com/photo-1571266028243-3716f02d2d2e?ixlib=rb-4.0.3",
-  },
-  {
-    name: "Pop Mix",
-    image:
-      "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?ixlib=rb-4.0.3",
-  },
-  {
-    name: "Rock Mix",
-    image:
-      "https://images.unsplash.com/photo-1498038432885-c6f3f1b912ee?ixlib=rb-4.0.3",
-  },
-  {
-    name: "Chill Mix",
-    image:
-      "https://images.unsplash.com/photo-1528459801416-a9e53bbf4e17?ixlib=rb-4.0.3",
-  },
-  {
-    name: "Classical Mix",
-    image:
-      "https://images.unsplash.com/photo-1507838153414-b4b713384a76?ixlib=rb-4.0.3",
-  },
-  {
-    name: "Punk Mix",
-    image:
-      "https://images.unsplash.com/photo-1604514813560-1e4f5726db65?ixlib=rb-4.0.3",
-  },
-  {
-    name: "Romantic Mix",
-    image:
-      "https://images.unsplash.com/photo-1518609878373-06d740f60d8b?ixlib=rb-4.0.3",
-  },
+  { name: "Indie Mix", image: "https://images.unsplash.com/photo-1525362081669-2b476bb628c3?ixlib=rb-4.0.3" },
+  { name: "House Mix", image: "https://images.unsplash.com/photo-1571266028243-3716f02d2d2e?ixlib=rb-4.0.3" },
+  { name: "Pop Mix", image: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?ixlib=rb-4.0.3" },
+  { name: "Rock Mix", image: "https://images.unsplash.com/photo-1498038432885-c6f3f1b912ee?ixlib=rb-4.0.3" },
+  { name: "Chill Mix", image: "https://images.unsplash.com/photo-1528459801416-a9e53bbf4e17?ixlib=rb-4.0.3" },
+  { name: "Classical Mix", image: "https://images.unsplash.com/photo-1507838153414-b4b713384a76?ixlib=rb-4.0.3" },
+  { name: "Punk Mix", image: "https://images.unsplash.com/photo-1604514813560-1e4f5726db65?ixlib=rb-4.0.3" },
+  { name: "Romantic Mix", image: "https://images.unsplash.com/photo-1518609878373-06d740f60d8b?ixlib=rb-4.0.3" },
 ];
 
 const Genres: FC = () => {

@@ -24,7 +24,7 @@ export const PrivateRoutes: FC<PrivateRouteProps> = ({
       navigate(-1);
     } else if (role == "artist" && auth?.user?.role !== role) {
       //artist login
-      navigate("/artist/login", { replace: true });
+      navigate("/artist/auth/login", { replace: true });
     } else if (role == "admin" && auth?.user?.role !== role) {
       //artist login
       navigate("/admin/login", { replace: true });
