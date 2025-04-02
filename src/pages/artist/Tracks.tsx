@@ -1,106 +1,84 @@
-import { FC, useState } from "react";
+import { FC, useState, useEffect } from "react";
+import { artistAlbumList } from "../../services/albumService";
+import { findTracksByAlbumId } from "../../services/trackService";
 import Dashboard from "../../layouts/Dashboard";
 import { Plus, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import Modal from "../../components/modal/Modal";
 import CreateTrack from "./form/CreateTrack";
 
-interface Track {
+type Track = {
   id: string;
   name: string;
-  genre: string;
+  audio: string;
+  genre_id: string;
+  album_id: string;
+  artist_id: string;
+  listen_count: number;
   description: string;
-  audioUrl: string;
-}
+  created_at: string;
+  artist: {
+    name: string;
+    image: string;
+  };
+  genre: {
+    name: string;
+  };
+  album: {
+    name: string;
+    image: string;
+  };
+};
 
-interface Album {
+type Album = {
   id: string;
   name: string;
-}
+  genre_id: string;
+};
 
 const Tracks: FC = () => {
   const [selectedAlbum, setSelectedAlbum] = useState<string>("");
   const [showModal, setShowModal] = useState(false);
-  const [tracks, setTracks] = useState<Track[]>([
-    {
-      id: "1",
-      name: "Summer Nights",
-      genre: "Pop Rock",
-      description:
-        "A vibrant summer anthem with energetic guitar riffs and powerful vocals. The perfect soundtrack for those warm evening drives along the coast.",
-      audioUrl:
-        "https://cdn.pixabay.com/download/audio/2022/11/22/audio_febc508520.mp3",
-    },
-    {
-      id: "2",
-      name: "Midnight Dreams",
-      genre: "Alternative Rock",
-      description:
-        "A melodic journey through the night, featuring atmospheric synthesizers and dreamy lyrics. Takes listeners on an emotional ride through the darkness.",
-      audioUrl:
-        "https://cdn.pixabay.com/download/audio/2022/10/25/audio_f8cac506d3.mp3",
-    },
-    {
-      id: "3",
-      name: "Ocean Breeze",
-      genre: "Ambient",
-      description:
-        "Calming waves of sound wash over gentle synthesizer pads, creating a peaceful atmosphere perfect for relaxation and meditation.",
-      audioUrl:
-        "https://cdn.pixabay.com/download/audio/2022/09/02/audio_8209b2333f.mp3",
-    },
-    {
-      id: "4",
-      name: "Urban Groove",
-      genre: "Hip Hop",
-      description:
-        "Modern beats mixed with classic hip-hop elements create an infectious rhythm that captures the essence of city life.",
-      audioUrl:
-        "https://cdn.pixabay.com/download/audio/2022/08/04/audio_2dde668d05.mp3",
-    },
-    {
-      id: "5",
-      name: "Electric Dreams",
-      genre: "Electronic",
-      description:
-        "Pulsating synthesizers and dynamic beats combine in this energetic electronic track that transports listeners to a futuristic soundscape.",
-      audioUrl:
-        "https://cdn.pixabay.com/download/audio/2022/12/15/audio_c41e33d50d.mp3",
-    },
-    {
-      id: "6",
-      name: "Acoustic Sunrise",
-      genre: "Folk",
-      description:
-        "Warm acoustic guitars and gentle percussion create a peaceful morning atmosphere, perfect for starting your day.",
-      audioUrl:
-        "https://cdn.pixabay.com/download/audio/2023/01/05/audio_c5a1290311.mp3",
-    },
-    {
-      id: "7",
-      name: "Jazz Cafe",
-      genre: "Jazz",
-      description:
-        "Smooth jazz arrangements with piano and saxophone create the perfect ambiance for a sophisticated evening.",
-      audioUrl:
-        "https://cdn.pixabay.com/download/audio/2022/07/26/audio_fb53b4df75.mp3",
-    },
-    {
-      id: "8",
-      name: "Neon Lights",
-      genre: "Synthwave",
-      description:
-        "Retro-futuristic beats and synthesizers combine to create a nostalgic journey through an electronic landscape.",
-      audioUrl:
-        "https://cdn.pixabay.com/download/audio/2022/11/15/audio_5b5f54d9d5.mp3",
-    },
-  ]);
+  const [tracks, setTracks] = useState<Track[]>([]);
 
-  const [albums] = useState<Album[]>([
-    { id: "67de5b0a1c15745e62bb4fef", name: "Summer Collection" },
-    { id: "67ec292b4d2f3913c6c875b4", name: "Winter Beats" },
-    { id: "67ec29cc4d2f3913c6c875b5", name: "Spring Melodies" },
-  ]);
+  const [albums, setAlbums] = useState<Album[]>([]);
+
+  useEffect(() => {
+    const fetchAlbums = async () => {
+      try {
+        const response: any = await artistAlbumList();
+        if (response.success) {
+          setAlbums(response.data);
+        }
+      } catch (error) {
+        console.error("Error fetching albums:", error);
+        alert("Failed to fetch albums");
+      }
+    };
+
+    fetchAlbums();
+  }, []);
+
+  useEffect(() => {
+    const fetchTracks = async () => {
+      if (selectedAlbum) {
+        try {
+          const response: any = await findTracksByAlbumId(selectedAlbum);
+
+          if (response.data.success) {
+            setTracks(response.data.data);
+          }
+        } catch (error) {
+          console.error("Error fetching tracks:", error);
+          alert("Failed to fetch tracks");
+        }
+      } else {
+        setTracks([]);
+      }
+    };
+
+    fetchTracks();
+  }, [selectedAlbum]);
 
   const handleRowClick = (id: string) => {
     alert(`Track ID: ${id}`);
@@ -191,14 +169,14 @@ const Tracks: FC = () => {
                     {track.name}
                   </td>
                   <td className='py-3 px-4 text-dashboard-primaryText'>
-                    {track.genre}
+                    {track.genre.name}
                   </td>
                   <td className='py-3 px-4 text-dashboard-primaryText'>
                     <div className='line-clamp-2'>{track.description}</div>
                   </td>
                   <td className='py-3 px-4 text-dashboard-primaryText'>
                     <audio controls className='h-8'>
-                      <source src={track.audioUrl} type='audio/mpeg' />
+                      <source src={track.audio} type='audio/mpeg' />
                       Your browser does not support the audio element.
                     </audio>
                   </td>

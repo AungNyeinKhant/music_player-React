@@ -7,7 +7,7 @@ import Home from "../../pages/artist/Home";
 
 import Tracks from "../../pages/artist/Tracks";
 import Albums from "../../pages/artist/Albums";
-import CreateAlbum from "../../pages/artist/CreateAlbum";
+import CreateAlbum from "../../pages/artist/form/CreateAlbum";
 
 const ArtistAppRoutes: FC = () => {
   return (

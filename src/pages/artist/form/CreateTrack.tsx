@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { createTrack } from "../../../services/trackService";
+import { artistGenre } from "../../../services/albumService";
 
 interface CreateTrackFormValues {
   name: string;
@@ -25,31 +26,62 @@ const validationSchema = Yup.object({
   description: Yup.string(),
 });
 
-const genres = [
-  "Pop Rock",
-  "Alternative Rock",
-  "Ambient",
-  "Hip Hop",
-  "Electronic",
-  "Folk",
-  "Jazz",
-  "Synthwave",
-];
+interface Genre {
+  id: string;
+  name: string;
+}
+
+interface Album {
+  id: string;
+  name: string;
+  genre_id: string;
+}
 
 interface CreateTrackProps {
   selectedAlbum?: string;
-  albums: { id: string; name: string }[];
+  albums: { id: string; name: string; genre_id: string }[];
 }
 
 const CreateTrack: React.FC<CreateTrackProps> = ({ selectedAlbum, albums }) => {
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingGenres, setIsLoadingGenres] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [genres, setGenres] = useState<Genre[]>([]);
+  const [selectedGenre, setSelectedGenre] = useState<string>("");
+
+  useEffect(() => {
+    const fetchGenres = async () => {
+      setIsLoadingGenres(true);
+      try {
+        const response: any = await artistGenre();
+        if (response.success) {
+          setGenres(response.data);
+        }
+      } catch (error) {
+        console.error("Error fetching genres:", error);
+        setError("Failed to fetch genres");
+      } finally {
+        setIsLoadingGenres(false);
+      }
+    };
+
+    fetchGenres();
+  }, []);
+
+  useEffect(() => {
+    if (selectedAlbum && albums.length > 0) {
+      const album = albums.find((a) => a.id === selectedAlbum);
+      if (album && album.genre_id) {
+        setSelectedGenre(album.genre_id);
+      }
+    }
+  }, [selectedAlbum, albums]);
 
   const initialValues: CreateTrackFormValues = {
     name: "",
     audio: null,
-    genre: "",
+    genre: selectedGenre,
     albumId: selectedAlbum || "",
     description: "",
   };
@@ -88,6 +120,7 @@ const CreateTrack: React.FC<CreateTrackProps> = ({ selectedAlbum, albums }) => {
       initialValues={initialValues}
       validationSchema={validationSchema}
       onSubmit={handleSubmit}
+      enableReinitialize
     >
       {({ setFieldValue }) => (
         <Form className='space-y-6'>
@@ -102,6 +135,7 @@ const CreateTrack: React.FC<CreateTrackProps> = ({ selectedAlbum, albums }) => {
               type='text'
               id='name'
               name='name'
+              disabled={isLoading || isLoadingGenres}
               className='w-full bg-dashboard-primaryDark text-dashboard-primaryText px-4 py-3 rounded-md focus:outline-none focus:ring-2 focus:ring-dashboard-secondary border border-dashboard-accent border-opacity-20'
               placeholder='Enter track name'
             />
@@ -123,6 +157,7 @@ const CreateTrack: React.FC<CreateTrackProps> = ({ selectedAlbum, albums }) => {
               type='file'
               id='audio'
               accept='audio/*'
+              disabled={isLoading || isLoadingGenres}
               onChange={(event) => {
                 const file = event.currentTarget.files?.[0];
                 setFieldValue("audio", file);
@@ -147,12 +182,13 @@ const CreateTrack: React.FC<CreateTrackProps> = ({ selectedAlbum, albums }) => {
               as='select'
               id='genre'
               name='genre'
+              disabled={isLoading || isLoadingGenres}
               className='w-full bg-dashboard-primaryDark text-dashboard-primaryText px-4 py-3 rounded-md focus:outline-none focus:ring-2 focus:ring-dashboard-secondary border border-dashboard-accent border-opacity-20'
             >
               <option value=''>Select genre</option>
               {genres.map((genre) => (
-                <option key={genre} value={"67d97afca68321d42e78f2c9"}>
-                  {genre}
+                <option key={genre.id} value={genre.id}>
+                  {genre.name}
                 </option>
               ))}
             </Field>
@@ -174,6 +210,7 @@ const CreateTrack: React.FC<CreateTrackProps> = ({ selectedAlbum, albums }) => {
               as='select'
               id='albumId'
               name='albumId'
+              disabled={isLoading || isLoadingGenres}
               className='w-full bg-dashboard-primaryDark text-dashboard-primaryText px-4 py-3 rounded-md focus:outline-none focus:ring-2 focus:ring-dashboard-secondary border border-dashboard-accent border-opacity-20'
             >
               <option value=''>Select album</option>
@@ -202,6 +239,7 @@ const CreateTrack: React.FC<CreateTrackProps> = ({ selectedAlbum, albums }) => {
               id='description'
               name='description'
               rows={4}
+              disabled={isLoading || isLoadingGenres}
               className='w-full bg-dashboard-primaryDark text-dashboard-primaryText px-4 py-3 rounded-md focus:outline-none focus:ring-2 focus:ring-dashboard-secondary border border-dashboard-accent border-opacity-20 resize-none'
               placeholder='Enter track description'
             />

@@ -1,8 +1,8 @@
-import { FC, useRef, useState } from "react";
+import { FC, useRef, useState, useEffect } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import Dashboard from "../../layouts/Dashboard";
-import { createAlbum } from "../../services/albumService";
+import Dashboard from "../../../layouts/Dashboard";
+import { createAlbum, artistGenre } from "../../../services/albumService";
 
 // Define supported image formats
 const SUPPORTED_FORMATS = [
@@ -13,47 +13,40 @@ const SUPPORTED_FORMATS = [
   "image/svg+xml",
   "image/tiff",
   "image/webp",
+  "image/jfif",
 ];
 const FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
-const GENRES = [
-  "Pop",
-  "Rock",
-  "Hip Hop",
-  "Jazz",
-  "Classical",
-  "Electronic",
-  "R&B",
-  "Country",
-  "Blues",
-  "Folk",
-];
+type Genre = {
+  id: string;
+  name: string;
+};
 
 const CreateAlbum: FC = () => {
   const imageInputRef = useRef<HTMLInputElement>(null);
-  const bgImageInputRef = useRef<HTMLInputElement>(null);
+  const [genres, setGenres] = useState<Genre[]>([]);
+
+  useEffect(() => {
+    const fetchGenres = async () => {
+      try {
+        const response: any = await artistGenre();
+        if (response.success) {
+          setGenres(response.data);
+        }
+      } catch (error) {
+        console.error("Error fetching genres:", error);
+        setError("Failed to fetch genres");
+      }
+    };
+
+    fetchGenres();
+  }, []);
 
   const albumSchema = Yup.object().shape({
     name: Yup.string().required("Album name is required"),
     description: Yup.string(),
     genre: Yup.string().required("Genre is required"),
     image: Yup.mixed()
-      .nullable()
-      .test(
-        "fileFormat",
-        "Unsupported file format. Only jpg, jpeg, png, and gif are allowed",
-        (value) => {
-          if (!value) return true;
-          return (
-            value instanceof File && SUPPORTED_FORMATS.includes(value.type)
-          );
-        }
-      )
-      .test("fileSize", "File too large. Max size is 5MB", (value) => {
-        if (!value) return true;
-        return value instanceof File && value.size <= FILE_SIZE;
-      }),
-    bg_image: Yup.mixed()
       .nullable()
       .test(
         "fileFormat",
@@ -81,7 +74,6 @@ const CreateAlbum: FC = () => {
       description: "",
       genre: "",
       image: null,
-      bg_image: null,
     },
     validationSchema: albumSchema,
     onSubmit: async (values) => {
@@ -95,7 +87,6 @@ const CreateAlbum: FC = () => {
           description: values.description || "",
           genre_id: values.genre,
           image: values.image || undefined,
-          bg_image: values.bg_image || undefined,
         };
 
         const response = await createAlbum(albumData);
@@ -199,9 +190,9 @@ const CreateAlbum: FC = () => {
               className='w-full px-4 py-2 rounded bg-dashboard-primary text-dashboard-primaryText border border-dashboard-primaryDarkText focus:outline-none focus:ring-2 focus:ring-dashboard-secondary'
             >
               <option value=''>Select a genre</option>
-              {GENRES.map((genre) => (
-                <option key={genre} value={"67d97afca68321d42e78f2ca"}>
-                  {genre}
+              {genres.map((genre) => (
+                <option key={genre.id} value={genre.id}>
+                  {genre.name}
                 </option>
               ))}
             </select>
@@ -212,7 +203,7 @@ const CreateAlbum: FC = () => {
             ) : null}
           </div>
 
-          <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
+          <div className='grid grid-cols-1  gap-6'>
             {/* Album Cover Image Upload */}
             <div>
               <label
@@ -244,41 +235,6 @@ const CreateAlbum: FC = () => {
               {formik.touched.image && formik.errors.image ? (
                 <div className='text-red-500 mt-1 text-sm'>
                   {formik.errors.image as string}
-                </div>
-              ) : null}
-            </div>
-
-            {/* Background Image Upload */}
-            <div>
-              <label
-                htmlFor='bg_image'
-                className='block text-dashboard-primaryText mb-2'
-              >
-                Background Image (Optional)
-              </label>
-              <div className='relative'>
-                <input
-                  id='bg_image'
-                  name='bg_image'
-                  type='file'
-                  accept='image/*'
-                  ref={bgImageInputRef}
-                  onChange={(e) => handleFileChange(e, "bg_image")}
-                  className='hidden'
-                />
-                <button
-                  type='button'
-                  onClick={() => bgImageInputRef.current?.click()}
-                  className='w-full px-4 py-2 rounded bg-dashboard-primary text-dashboard-primaryText border border-dashboard-primaryDarkText focus:outline-none focus:ring-2 focus:ring-dashboard-secondary text-left'
-                >
-                  {formik.values.bg_image
-                    ? (formik.values.bg_image as File).name
-                    : "Choose file"}
-                </button>
-              </div>
-              {formik.touched.bg_image && formik.errors.bg_image ? (
-                <div className='text-red-500 mt-1 text-sm'>
-                  {formik.errors.bg_image as string}
                 </div>
               ) : null}
             </div>

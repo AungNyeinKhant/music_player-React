@@ -1,56 +1,41 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { artistAlbumList } from "../../services/albumService";
 import Dashboard from "../../layouts/Dashboard";
 import { Plus, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { artistAPI } from "../../services/httpService";
+import DEFAULT_ALBUM_IMAGE from "../../assets/image/no-album-image.svg";
 
-interface Album {
+type Album = {
   id: string;
   name: string;
-  cover: string;
-  background: string;
-  genre: string;
-}
+  image: string | null;
+  description: string;
+  genre_id: string;
+  created_at: string;
+  genre: { name: string };
+};
 
 const Albums: React.FC = () => {
-  const [albums, setAlbums] = useState<Album[]>([
-    {
-      id: "1",
-      name: "Midnight Memories",
-      cover:
-        "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3",
-      background:
-        "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3",
-      genre: "Pop Rock",
-    },
-    {
-      id: "2",
-      name: "Evolve",
-      cover:
-        "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?ixlib=rb-4.0.3",
-      background:
-        "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?ixlib=rb-4.0.3",
-      genre: "Alternative Rock",
-    },
-    {
-      id: "3",
-      name: "After Hours",
-      cover:
-        "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?ixlib=rb-4.0.3",
-      background:
-        "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?ixlib=rb-4.0.3",
-      genre: "R&B",
-    },
-    {
-      id: "4",
-      name: "Future Nostalgia",
-      cover:
-        "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?ixlib=rb-4.0.3",
-      background:
-        "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?ixlib=rb-4.0.3",
-      genre: "Dance Pop",
-    },
-  ]);
+  const [albums, setAlbums] = useState<Album[]>([]);
+
+  useEffect(() => {
+    const fetchAlbums = async () => {
+      try {
+        const response: any = await artistAlbumList();
+        if (response.success) {
+          setAlbums(response.data);
+        }
+      } catch (error) {
+        console.error("Error fetching albums:", error);
+        alert("Failed to fetch albums");
+      }
+    };
+
+    fetchAlbums();
+  }, []);
+
+  // Removed dummy data
 
   const handleRowClick = (id: string) => {
     alert(`Album ID: ${id}`);
@@ -93,7 +78,6 @@ const Albums: React.FC = () => {
               <tr className='bg-dashboard-primaryDark text-dashboard-primaryText border-b border-dashboard-accent border-opacity-20'>
                 <th className='text-left py-3 px-4'>Name</th>
                 <th className='text-left py-3 px-4'>Cover</th>
-                <th className='text-left py-3 px-4'>Background</th>
                 <th className='text-left py-3 px-4'>Genre</th>
                 <th className='text-left py-3 px-4'>Actions</th>
               </tr>
@@ -111,23 +95,17 @@ const Albums: React.FC = () => {
                   <td className='py-3 px-4 text-dashboard-primaryText'>
                     <div className='w-12 h-12 rounded overflow-hidden'>
                       <img
-                        src={album.cover}
+                        src={
+                          album.image ? `${album.image}` : DEFAULT_ALBUM_IMAGE
+                        }
                         alt={album.name}
                         className='w-full h-full object-cover'
                       />
                     </div>
                   </td>
+
                   <td className='py-3 px-4 text-dashboard-primaryText'>
-                    <div className='w-40 h-12 rounded overflow-hidden'>
-                      <img
-                        src={album.background}
-                        alt={album.name}
-                        className='w-full h-full object-cover'
-                      />
-                    </div>
-                  </td>
-                  <td className='py-3 px-4 text-dashboard-primaryText'>
-                    {album.genre}
+                    {album.genre.name}
                   </td>
                   <td className='py-3 px-4 text-dashboard-primaryText'>
                     <button

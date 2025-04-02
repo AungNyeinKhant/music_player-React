@@ -27,3 +27,23 @@ export const createAlbum = async (albumData: {
     throw error;
   }
 };
+
+export const artistAlbumList = async () => {
+  try {
+    const response = await artistAPI.get("/albums");
+    return response.data;
+  } catch (error) {
+    console.error("artistAlbumList error:", error);
+    throw error;
+  }
+};
+
+export const artistGenre = async () => {
+  try {
+    const response = await artistAPI.get("/genres");
+    return response.data;
+  } catch (error) {
+    console.error("artistGenre error:", error);
+    throw error;
+  }
+};

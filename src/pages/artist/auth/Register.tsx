@@ -37,6 +37,7 @@ const Register: FC = () => {
     "image/svg+xml",
     "image/tiff",
     "image/webp",
+    "image/jfif"
   ];
   const FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
