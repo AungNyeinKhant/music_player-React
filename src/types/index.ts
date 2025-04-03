@@ -1,12 +1,5 @@
 import React from "react";
 
-export type Track = {
-  id: string;
-  title: string;
-  artist: string;
-  cover: string;
-};
-
 export type TrendingTrack = {
   title: string;
   artist: string;
@@ -42,4 +35,38 @@ export type UserAuth = {
 export type AuthContextType = {
   user: UserAuth | null;
   setUser: React.Dispatch<React.SetStateAction<UserAuth | null>>;
+};
+
+export type Track = {
+  id: string;
+  name: string;
+  audio: string;
+  genre_id: string;
+  album_id: string;
+  artist_id: string;
+  listen_count: number;
+  description: string;
+  created_at: string;
+  artist: {
+    name: string;
+    image: string;
+  };
+  genre: {
+    name: string;
+  };
+  album: {
+    name: string;
+    image: string;
+  };
+};
+
+export type TrackContextFormat = {
+  playTrack: Track;
+  queTracks: Track[];
+};
+export type TrackContextType = {
+  chosenTrack: TrackContextFormat | null;
+  setChosenTrack: React.Dispatch<
+    React.SetStateAction<TrackContextFormat | null>
+  >;
 };
