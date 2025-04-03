@@ -3,11 +3,14 @@ import { adminAPI, artistAPI, userAPI } from "./httpService";
 
 export const userLogin = async (email: string, password: string) => {
   try {
-    const response = await userAPI.post("/login", {
+    const response: any = await userAPI.post("/auth/login", {
       email,
       password,
     });
     console.log("userLogin response:", response);
+    userAPI.defaults.headers.common[
+      "Authorization"
+    ] = `Bearer ${response?.data?.data?.accessToken}`;
     return response;
   } catch (error) {
     console.error("userLogin error:", error);

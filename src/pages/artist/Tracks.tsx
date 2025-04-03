@@ -52,7 +52,6 @@ const Tracks: FC = () => {
         }
       } catch (error) {
         console.error("Error fetching albums:", error);
-        alert("Failed to fetch albums");
       }
     };
 
@@ -70,7 +69,6 @@ const Tracks: FC = () => {
           }
         } catch (error) {
           console.error("Error fetching tracks:", error);
-          alert("Failed to fetch tracks");
         }
       } else {
         setTracks([]);
@@ -92,7 +90,6 @@ const Tracks: FC = () => {
         // setTracks(tracks.filter((t) => t.id !== track.id));
       } catch (error) {
         console.error("Error deleting track:", error);
-        alert("Failed to delete track");
       }
     }
   };

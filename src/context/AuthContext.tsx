@@ -5,9 +5,8 @@ export const AuthContext = createContext<AuthContextType | null>(null);
 
 export default function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<UserAuth | null>({
-    id: "1",
-    role: "user",
-    accessToken: "123",
+    id: "",
+    role: "",
   });
 
   // Create value object

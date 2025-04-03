@@ -28,7 +28,6 @@ const Albums: React.FC = () => {
         }
       } catch (error) {
         console.error("Error fetching albums:", error);
-        alert("Failed to fetch albums");
       }
     };
 
@@ -49,7 +48,6 @@ const Albums: React.FC = () => {
         // setAlbums(albums.filter((a) => a.id !== album.id));
       } catch (error) {
         console.error("Error deleting album:", error);
-        alert("Failed to delete album");
       }
     }
   };

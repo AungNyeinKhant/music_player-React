@@ -1,6 +1,7 @@
 import { FC } from "react";
 import { Search, Menu } from "lucide-react";
 import { Link } from "react-router-dom";
+import Logo from "../../assets/image/music-player-logo.svg";
 
 type HeaderProps = {
   onSidebarOpen: () => void;
@@ -15,11 +16,15 @@ const Header: FC<HeaderProps> = ({ onSidebarOpen }) => {
           onClick={onSidebarOpen}
           className='p-2 hover:bg-[#282828] rounded-full'
         >
-          <span className='text-secondary text-xl font-bold'>Legacy</span>
+          <div className='flex flex-row items-center'>
+            <span className='text-secondary text-xl font-bold'>Legacy</span>
+            <img
+              src={Logo}
+              alt='Music Player Logo'
+              className='w-[48px] h-[48px]'
+            />
+          </div>
         </button>
-        <Link to='/' className='ml-2'>
-          <img src='/logo.png' alt='Logo' className='h-8' />
-        </Link>
       </div>
 
       {/* Search Bar */}
