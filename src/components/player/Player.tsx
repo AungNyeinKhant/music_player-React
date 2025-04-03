@@ -8,8 +8,11 @@ import {
   Shuffle,
   Volume2,
 } from "lucide-react";
+import { useTrack } from "../../context/TrackContext";
+import NoImage from "../../assets/image/no-album-image.svg";
 
 const Player: FC = () => {
+  const selectedTrack = useTrack();
   const audioRef = useRef<HTMLAudioElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
@@ -32,8 +35,16 @@ const Player: FC = () => {
     };
   }, []);
 
+  useEffect(() => {
+    if (selectedTrack && audioRef.current) {
+      audioRef.current.src = selectedTrack.chosenTrack?.playTrack?.audio || "";
+      audioRef.current.play();
+      setIsPlaying(true);
+    }
+  }, [selectedTrack]);
+
   const togglePlay = () => {
-    if (!audioRef.current) return;
+    if (!audioRef.current || !selectedTrack) return;
     if (isPlaying) {
       audioRef.current.pause();
     } else {
@@ -74,13 +85,19 @@ const Player: FC = () => {
       <div className='flex justify-between items-center max-w-screen-xl mx-auto'>
         <div className='flex items-center w-[30%]'>
           <img
-            src='https://images.unsplash.com/photo-1470225620780-dba8ba36b745'
+            src={selectedTrack?.chosenTrack?.playTrack?.album?.image || NoImage}
             alt='Current track'
             className='w-14 h-14 rounded-lg'
           />
           <div className='ml-4'>
-            <h4 className='text-primaryText text-sm'>Higher Power</h4>
-            <p className='text-gray-400 text-xs'>Coldplay</p>
+            <h4 className='text-primaryText text-sm'>
+              {selectedTrack?.chosenTrack?.playTrack?.name ||
+                "No track selected"}
+            </h4>
+            <p className='text-gray-400 text-xs'>
+              {selectedTrack?.chosenTrack?.playTrack?.artist.name ||
+                "Unknown artist"}
+            </p>
           </div>
         </div>
 
@@ -133,11 +150,7 @@ const Player: FC = () => {
           </div>
         </div>
       </div>
-      <audio
-        ref={audioRef}
-        src='https://files.freemusicarchive.org/storage-freemusicarchive-org/music/no_curator/Tours/Enthusiast/Tours_-_01_-_Enthusiast.mp3'
-        preload='metadata'
-      />
+      <audio ref={audioRef} preload='metadata' />
     </div>
   );
 };

@@ -21,7 +21,7 @@ export const PrivateRoutes: FC<PrivateRouteProps> = ({
 
   useEffect(() => {
     if (role == "user" && auth?.user?.role !== role) {
-      navigate(-1);
+      navigate("/login", { replace: true });
     } else if (role == "artist" && auth?.user?.role !== role) {
       //artist login
       navigate("/artist/auth/login", { replace: true });

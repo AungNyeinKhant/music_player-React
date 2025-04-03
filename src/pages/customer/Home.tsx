@@ -1,44 +1,34 @@
-import { FC } from "react";
+import { FC, useState, useEffect } from "react";
 import MusicCard from "../../components/cards/MusicCard";
 import PlaylistCard from "../../components/cards/PlaylistCard";
 import {
   Track,
   PlaylistCard as PlaylistCardType,
   TrendingTrack,
+  TrackContextType,
 } from "../../types";
 import { Play } from "lucide-react";
 import Template from "../../layouts/Template";
+import { recentTracks, playTrack } from "../../services/trackService";
+import { useTrack } from "../../context/TrackContext";
 const Home: FC = () => {
-  const recentlyPlayed: Track[] = [
-    {
-      id: "1",
-      title: "Music of the Spheres",
-      artist: "Coldplay",
-      cover:
-        "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?ixlib=rb-4.0.3",
-    },
-    {
-      id: "2",
-      title: "Native",
-      artist: "OneRepublic",
-      cover:
-        "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3",
-    },
-    {
-      id: "3",
-      title: "Evolve",
-      artist: "Imagine Dragons",
-      cover:
-        "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?ixlib=rb-4.0.3",
-    },
-    {
-      id: "4",
-      title: "Starboy",
-      artist: "The Weeknd",
-      cover:
-        "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?ixlib=rb-4.0.3",
-    },
-  ];
+  const chosenTracks: TrackContextType | null = useTrack();
+  const [recentPlayTracks, setRecentPlayTracks] = useState<Track[]>([]);
+
+  const fetchRecentTracks = async () => {
+    try {
+      const response: any = await recentTracks(20);
+      if (response.data.success) {
+        setRecentPlayTracks(response.data.data);
+      }
+    } catch (error) {
+      console.error("Error fetching recent tracks:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchRecentTracks();
+  }, []);
 
   const trendingTracks: TrendingTrack[] = [
     {
@@ -118,9 +108,26 @@ const Home: FC = () => {
           </div>
           <div className='relative w-full'>
             <div className='flex gap-4 overflow-x-auto snap-x snap-mandatory scrollbar-hide'>
-              {recentlyPlayed.map((track) => (
+              {recentPlayTracks.map((track) => (
                 <div key={track.id} className='flex-none snap-start'>
-                  <MusicCard track={track} />
+                  <button
+                    onClick={async () => {
+                      try {
+                        const response: any = await playTrack(track.id);
+                        if (response.data.success) {
+                          chosenTracks?.setChosenTrack({
+                            playTrack: track,
+                            queTracks: recentPlayTracks,
+                          });
+                        }
+                      } catch (error) {
+                        console.error("Error playing track:", error);
+                      }
+                    }}
+                    className='focus:outline-none'
+                  >
+                    <MusicCard track={track} />
+                  </button>
                 </div>
               ))}
             </div>
