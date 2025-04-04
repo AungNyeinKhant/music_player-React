@@ -7,14 +7,26 @@ import {
   TrendingTrack,
   TrackContextType,
 } from "../../types";
-import { Play } from "lucide-react";
+import NoImage from "../../assets/image/no-album-image.svg";
+
+import { Heart, MoreVertical } from "lucide-react";
 import Template from "../../layouts/Template";
-import { recentTracks, playTrack } from "../../services/trackService";
+import {
+  recentTracks,
+  playTrack,
+  newTrendingTracksServ,
+  mostPlayedTracksServ,
+} from "../../services/trackService";
 import { useTrack } from "../../context/TrackContext";
 const Home: FC = () => {
   const chosenTracks: TrackContextType | null = useTrack();
   const [recentPlayTracks, setRecentPlayTracks] = useState<Track[]>([]);
-
+  const [newTrendingTracks, setNewTrendingTracks] = useState<Track[] | null>(
+    null
+  );
+  const [mostPlayedTracks, setMostPlayedTracks] = useState<Track[] | null>(
+    null
+  );
   const fetchRecentTracks = async () => {
     try {
       const response: any = await recentTracks(20);
@@ -26,40 +38,33 @@ const Home: FC = () => {
     }
   };
 
+  const fetchMostPlayedTracks = async () => {
+    try {
+      const response: any = await mostPlayedTracksServ(20);
+      if (response.data.success) {
+        setMostPlayedTracks(response.data.data);
+      }
+    } catch (error) {
+      console.error("Error fetching most played tracks:", error);
+    }
+  };
+
   useEffect(() => {
     fetchRecentTracks();
+    fetchTrendingTracks();
+    fetchMostPlayedTracks();
   }, []);
 
-  const trendingTracks: TrendingTrack[] = [
-    {
-      title: "Rodrigo",
-      artist: "Foster Olive",
-      duration: "3:45",
-      cover:
-        "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?ixlib=rb-4.0.3",
-    },
-    {
-      title: "Hard Works",
-      artist: "Justin AMDNA",
-      duration: "2:58",
-      cover:
-        "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3",
-    },
-    {
-      title: "Kiss Me More",
-      artist: "Doja Cat ft. SZA",
-      duration: "5:30",
-      cover:
-        "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?ixlib=rb-4.0.3",
-    },
-    {
-      title: "Save Your Tears",
-      artist: "The Weeknd",
-      duration: "5:35",
-      cover:
-        "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?ixlib=rb-4.0.3",
-    },
-  ];
+  const fetchTrendingTracks = async () => {
+    try {
+      const response: any = await newTrendingTracksServ(5);
+      if (response.data.success) {
+        setNewTrendingTracks(response.data.data);
+      }
+    } catch (error) {
+      console.error("Error fetching trending tracks:", error);
+    }
+  };
 
   const playlists: PlaylistCardType[] = [
     {
@@ -108,62 +113,148 @@ const Home: FC = () => {
           </div>
           <div className='relative w-full'>
             <div className='flex gap-4 overflow-x-auto snap-x snap-mandatory scrollbar-hide'>
-              {recentPlayTracks.map((track) => (
-                <div key={track.id} className='flex-none snap-start'>
-                  <button
-                    onClick={async () => {
-                      try {
-                        const response: any = await playTrack(track.id);
-                        if (response.data.success) {
-                          chosenTracks?.setChosenTrack({
-                            playTrack: track,
-                            queTracks: recentPlayTracks,
-                          });
-                        }
-                      } catch (error) {
-                        console.error("Error playing track:", error);
-                      }
-                    }}
-                    className='focus:outline-none'
-                  >
-                    <MusicCard track={track} />
-                  </button>
-                </div>
-              ))}
+              {recentPlayTracks
+                ? recentPlayTracks.map((track) => (
+                    <div key={track.id} className='flex-none snap-start'>
+                      <button
+                        onClick={async () => {
+                          try {
+                            const response: any = await playTrack(track.id);
+                            if (response.data.success) {
+                              chosenTracks?.setChosenTrack({
+                                playTrack: track,
+                                queTracks: recentPlayTracks,
+                              });
+                            }
+                          } catch (error) {
+                            console.error("Error playing track:", error);
+                          }
+                        }}
+                        className='focus:outline-none'
+                      >
+                        <MusicCard track={track} />
+                      </button>
+                    </div>
+                  ))
+                : "No recent tracks"}
             </div>
           </div>
         </section>
 
         <div className='mb-8'>
-          <h2 className='text-2xl font-bold text-primaryText mb-4'>Trending</h2>
+          <h2 className='text-2xl font-bold text-primaryText mb-4'>
+            New Trending Tracks
+          </h2>
           <div className='bg-[#181818] rounded-lg p-4'>
-            {trendingTracks.map((track, index) => (
-              <div
-                key={index}
-                className='flex items-center justify-between p-2 hover:bg-[#282828] rounded-lg group'
-              >
-                <div className='flex items-center flex-1'>
-                  <span className='text-gray-400 w-8'>{index + 1}</span>
-                  <img
-                    src={track.cover}
-                    alt={track.title}
-                    className='w-12 h-12 rounded object-cover'
-                  />
-                  <div className='ml-4'>
-                    <h4 className='text-primaryText text-sm'>{track.title}</h4>
-                    <p className='text-gray-400 text-xs'>{track.artist}</p>
+            {newTrendingTracks
+              ? newTrendingTracks.map((track, index) => (
+                  <div
+                    key={index}
+                    className='flex items-center justify-between p-2 hover:bg-[#282828] rounded-lg group'
+                  >
+                    {/* <div className='flex items-center flex-1'> */}
+                    <button
+                      className='flex items-center flex-1'
+                      onClick={async () => {
+                        try {
+                          const response: any = await playTrack(track.id);
+                          if (response.data.success) {
+                            chosenTracks?.setChosenTrack({
+                              playTrack: track,
+                              queTracks: recentPlayTracks,
+                            });
+                          }
+                        } catch (error) {
+                          console.error("Error playing track:", error);
+                        }
+                      }}
+                    >
+                      <span className='text-gray-400 w-8'>{index + 1}</span>
+                      <img
+                        src={
+                          track.album ? track.album.image || NoImage : NoImage
+                        }
+                        alt={track.name}
+                        className='w-12 h-12 rounded object-cover'
+                      />
+                      <div className='ml-4'>
+                        <h4 className='text-primaryText text-sm'>
+                          {track.name}
+                        </h4>
+                        <p className='text-gray-400 text-xs'>
+                          {track?.artist?.name}
+                        </p>
+                      </div>
+                    </button>
+                    {/* </div> */}
+                    <div className='flex items-center gap-3'>
+                      <span className='text-gray-400 text-sm'>
+                        {track.listen_count.toLocaleString()} streams
+                      </span>
+                      <button
+                        onClick={() => {
+                          alert(track.id);
+                        }}
+                        className='w-8 h-8 rounded-full bg-secondary items-center justify-center flex hover:bg-opacity-80'
+                      >
+                        <Heart className='w-4 h-4 text-primary' />
+                      </button>
+                      <button
+                        onClick={() => {
+                          alert(track.id);
+                        }}
+                        className='w-8 h-8 rounded-full bg-secondary items-center justify-center flex hover:bg-opacity-80'
+                      >
+                        <MoreVertical className='w-4 h-4 text-primary' />
+                      </button>
+                    </div>
                   </div>
-                </div>
-                <span className='text-gray-400 text-sm mr-4'>
-                  {track.duration}
-                </span>
-                <button className='w-8 h-8 rounded-full bg-secondary items-center justify-center flex'>
-                  <Play className='w-4 h-4 text-primary' />
-                </button>
-              </div>
-            ))}
+                ))
+              : "No new Tracks"}
           </div>
         </div>
+
+        <section className='mb-8'>
+          <div className='flex items-center justify-between mb-4'>
+            <h2 className='text-primaryText text-2xl font-bold'>
+              Most played tracks of the month
+            </h2>
+            {/* <a
+              href='#'
+              className='text-gray-400 text-sm hover:text-primaryText'
+            >
+              See all
+            </a> */}
+          </div>
+          <div className='relative w-full'>
+            <div className='flex gap-4 overflow-x-auto snap-x snap-mandatory scrollbar-hide'>
+              {mostPlayedTracks
+                ? mostPlayedTracks.map((track) => (
+                    <div key={track.id} className='flex-none snap-start'>
+                      <button
+                        onClick={async () => {
+                          try {
+                            const response: any = await playTrack(track.id);
+                            if (response.data.success) {
+                              chosenTracks?.setChosenTrack({
+                                playTrack: track,
+                                queTracks: recentPlayTracks,
+                              });
+                            }
+                          } catch (error) {
+                            console.error("Error playing track:", error);
+                          }
+                        }}
+                        className='focus:outline-none'
+                      >
+                        <MusicCard track={track} />
+                      </button>
+                    </div>
+                  ))
+                : "No recent tracks"}
+            </div>
+          </div>
+        </section>
 
         <div className='mb-8'>
           <div className='flex items-center justify-between mb-4'>

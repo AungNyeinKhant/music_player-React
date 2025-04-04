@@ -7,7 +7,7 @@ export const userLogin = async (email: string, password: string) => {
       email,
       password,
     });
-    console.log("userLogin response:", response);
+
     userAPI.defaults.headers.common[
       "Authorization"
     ] = `Bearer ${response?.data?.data?.accessToken}`;
@@ -23,7 +23,7 @@ export const userRegister = async (userData: {
   email: string;
   password: string;
   phone: string;
-  dateOfBirth?: string;
+  dob?: string;
   image?: File;
 }) => {
   try {
@@ -34,12 +34,16 @@ export const userRegister = async (userData: {
       }
     });
 
-    const response = await userAPI.post("/register", formData, {
+    const response: any = await userAPI.post("/auth/register", formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
     });
     console.log("userRegister response:", response);
+
+    userAPI.defaults.headers.common[
+      "Authorization"
+    ] = `Bearer ${response?.data?.data?.accessToken}`;
     return response;
   } catch (error) {
     console.error("userRegister error:", error);

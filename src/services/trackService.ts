@@ -21,6 +21,28 @@ export const playTrack = async (track_id: string) => {
     throw error;
   }
 };
+export const newTrendingTracksServ = async (limit: number) => {
+  try {
+    const response = await userAPI.get(
+      `/tracks/trending?limit=${limit}&offset=1`
+    );
+    return response;
+  } catch (error) {
+    console.error("trendingTracks error:", error);
+    throw error;
+  }
+};
+
+export const mostPlayedTracksServ = async (limit: number) => {
+  try {
+    const response = await userAPI.get(`/tracks/most-played?limit=${limit}`);
+    return response;
+  } catch (error) {
+    console.error("mostPlayedTracks error:", error);
+    throw error;
+  }
+};
+
 // ==================== user end =============================
 // ==================== artist =============================
 export const findTracksByAlbumId = async (albumId: string) => {

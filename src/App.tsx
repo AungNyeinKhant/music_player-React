@@ -1,6 +1,6 @@
 import { FC } from "react";
 
-import AppRoutes from "./routes/customer/AppRoutes";
+import AppRoutes from "./routes/user/AppRoutes";
 import ArtistAppRoutes from "./routes/artist/AppRoutes";
 import AdminAppRoutes from "./routes/admin/AppRoutes";
 import AuthProvider from "./context/AuthContext";
