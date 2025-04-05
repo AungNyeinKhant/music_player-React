@@ -35,7 +35,7 @@ const AdminHeader: FC<{
             alt='Profile'
             className='w-8 h-8 rounded-full'
           />
-          <span>Artist Name</span>
+          <span>Admin Name</span>
           <ChevronDown size={16} />
         </button>
 

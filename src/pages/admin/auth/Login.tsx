@@ -2,9 +2,17 @@ import { FC, useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { Eye, EyeOff } from "lucide-react";
+import { adminLogin } from "../../../services/AuthService";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../../context/AuthContext";
+import { storeRefreshToken } from "../../../utils/crypto";
 
 const Login: FC = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
+  const auth = useAuth();
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -25,10 +33,34 @@ const Login: FC = () => {
       password: "",
     },
     validationSchema: loginSchema,
-    onSubmit: (values) => {
-      console.log("Login values:", values);
-      // Here you would typically call your auth service
-      // Example: AuthService.login(values.email, values.password)
+    onSubmit: async (values) => {
+      setError(null);
+      setIsLoading(true);
+
+      try {
+        const response = await adminLogin(values.email, values.password);
+
+        if (response.status === 400) {
+          const errorMessage =
+            response?.data?.data?.error ?? "Something went wrong";
+          alert(errorMessage);
+          return;
+        }
+
+        storeRefreshToken(response?.data?.data?.refreshToken);
+
+        auth?.setUser({
+          id: response?.data?.data?.admin.id,
+          role: "admin",
+        });
+
+        navigate("/admin");
+      } catch (err) {
+        console.error("Login failed:", err);
+        setError("Invalid email or password");
+      } finally {
+        setIsLoading(false);
+      }
     },
   });
 
@@ -36,7 +68,7 @@ const Login: FC = () => {
     <div className='min-h-screen flex items-center justify-center bg-primary'>
       <div className='bg-primaryDark p-8 rounded-lg shadow-lg w-full max-w-md'>
         <h2 className='text-2xl font-bold mb-6 text-primaryText text-center'>
-          Artist Login
+          Admin Login
         </h2>
 
         <form onSubmit={formik.handleSubmit} className='space-y-6'>
@@ -52,7 +84,7 @@ const Login: FC = () => {
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               value={formik.values.email}
-              className='w-full px-4 py-2 rounded bg-primary text-primaryText border border-gray-700 focus:outline-none focus:ring-2 focus:ring-secondary'
+              className='w-full px-4 py-2 rounded bg-primary text-primaryText border border-gray-700 focus:outline-none focus:ring-2 focus:ring-dashboard-secondary'
             />
             {formik.touched.email && formik.errors.email ? (
               <div className='text-red-500 mt-1 text-sm'>
@@ -74,7 +106,7 @@ const Login: FC = () => {
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 value={formik.values.password}
-                className='w-full px-4 py-2 rounded bg-primary text-primaryText border border-gray-700 focus:outline-none focus:ring-2 focus:ring-secondary'
+                className='w-full px-4 py-2 rounded bg-primary text-primaryText border border-gray-700 focus:outline-none focus:ring-2 focus:ring-dashboard-secondary'
               />
               <button
                 type='button'
@@ -94,7 +126,7 @@ const Login: FC = () => {
           <div>
             <button
               type='submit'
-              className='w-full bg-secondary hover:bg-opacity-90 text-white font-medium py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-secondary transition duration-150 ease-in-out'
+              className='w-full bg-dashboard-secondary hover:bg-opacity-90 text-white font-medium py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-dashboard-secondary transition duration-150 ease-in-out'
             >
               Sign In
             </button>
@@ -102,7 +134,10 @@ const Login: FC = () => {
         </form>
 
         <div className='mt-4 text-center'>
-          <a href='#' className='text-primaryDarkText hover:text-secondary'>
+          <a
+            href='#'
+            className='text-primaryDarkText hover:text-dashboard-secondary'
+          >
             Forgot your password?
           </a>
         </div>

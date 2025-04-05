@@ -21,10 +21,10 @@ const ArtistAppRoutes: FC = () => {
               <Routes>
                 <Route index path='/' element={<Home />} />
                 //Albums
-                <Route index path='/albums' element={<Albums />} />
-                <Route index path='/albums/create' element={<CreateAlbum />} />
+                <Route path='/albums' element={<Albums />} />
+                <Route path='/albums/create' element={<CreateAlbum />} />
                 //Tracks
-                <Route index path='/tracks' element={<Tracks />} />
+                <Route path='/tracks' element={<Tracks />} />
               </Routes>
             </PrivateRoutes>
           }

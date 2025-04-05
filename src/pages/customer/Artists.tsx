@@ -42,15 +42,6 @@ const Artists: FC = () => {
     },
   ];
 
-  const formatListenCount = (count: number): string => {
-    if (count >= 1000000) {
-      return `${(count / 1000000).toFixed(1)}M listeners`;
-    } else if (count >= 1000) {
-      return `${(count / 1000).toFixed(1)}K listeners`;
-    }
-    return `${count} listeners`;
-  };
-
   return (
     <Template>
       <div className='flex-1 bg-gradient-to-b from-primary to-black p-8 overflow-auto pb-28'>

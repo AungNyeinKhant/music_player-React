@@ -1,5 +1,12 @@
 import { FC } from "react";
-import { LayoutDashboard, Music, Album } from "lucide-react";
+import {
+  LayoutDashboard,
+  BarChart2,
+  Tag,
+  Package,
+  Users,
+  Receipt,
+} from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 
 const AdminSidebar: FC<{ isSidebarOpen: boolean }> = ({ isSidebarOpen }) => {
@@ -20,9 +27,9 @@ const AdminSidebar: FC<{ isSidebarOpen: boolean }> = ({ isSidebarOpen }) => {
         <ul className='space-y-2'>
           <li>
             <Link
-              to='/artist'
+              to='/admin'
               className={`flex items-center p-3 rounded-md ${
-                location.pathname === "/artist"
+                location.pathname === "/admin"
                   ? "bg-dashboard-primary text-dashboard-primaryText"
                   : "hover:bg-dashboard-primary text-dashboard-primaryDarkText"
               }`}
@@ -36,42 +43,102 @@ const AdminSidebar: FC<{ isSidebarOpen: boolean }> = ({ isSidebarOpen }) => {
           </li>
           <li>
             <Link
-              to='/artist/albums'
+              to='/admin/analysis-view'
               className={`flex items-center p-3 rounded-md ${
-                location.pathname === "/artist/albums"
+                location.pathname === "/admin/analysis-view"
                   ? "bg-dashboard-primary text-dashboard-primaryText"
                   : "hover:bg-dashboard-primary text-dashboard-primaryDarkText"
               }`}
             >
-              <Album
+              <BarChart2
                 size={20}
                 className={`mr-3 ${
-                  location.pathname === "/artist/albums"
+                  location.pathname === "/admin/analysis-view"
                     ? "text-dashboard-secondary"
                     : ""
                 }`}
               />
-              Albums
+              Analysis
             </Link>
           </li>
           <li>
             <Link
-              to='/artist/tracks'
+              to='/admin/genres'
               className={`flex items-center p-3 rounded-md ${
-                location.pathname === "/artist/tracks"
+                location.pathname === "/admin/genres"
                   ? "bg-dashboard-primary text-dashboard-primaryText"
                   : "hover:bg-dashboard-primary text-dashboard-primaryDarkText"
               }`}
             >
-              <Music
+              <Tag
                 size={20}
                 className={`mr-3 ${
-                  location.pathname === "/artist/tracks"
+                  location.pathname === "/admin/genres"
                     ? "text-dashboard-secondary"
                     : ""
                 }`}
               />
-              Tracks
+              Genres
+            </Link>
+          </li>
+          <li>
+            <Link
+              to='/admin/packages'
+              className={`flex items-center p-3 rounded-md ${
+                location.pathname === "/admin/packages"
+                  ? "bg-dashboard-primary text-dashboard-primaryText"
+                  : "hover:bg-dashboard-primary text-dashboard-primaryDarkText"
+              }`}
+            >
+              <Package
+                size={20}
+                className={`mr-3 ${
+                  location.pathname === "/admin/packages"
+                    ? "text-dashboard-secondary"
+                    : ""
+                }`}
+              />
+              Packages
+            </Link>
+          </li>
+          <li>
+            <Link
+              to='/admin/purchases'
+              className={`flex items-center p-3 rounded-md ${
+                location.pathname === "/admin/purchases"
+                  ? "bg-dashboard-primary text-dashboard-primaryText"
+                  : "hover:bg-dashboard-primary text-dashboard-primaryDarkText"
+              }`}
+            >
+              <Receipt
+                size={20}
+                className={`mr-3 ${
+                  location.pathname === "/admin/purchases"
+                    ? "text-dashboard-secondary"
+                    : ""
+                }`}
+              />
+              Purchases
+            </Link>
+          </li>
+          <li>
+            <Link
+              to='/admin/admins'
+              className={`flex items-center p-3 rounded-md ${
+                location.pathname === "/admin/admins"
+                  ? "bg-dashboard-primary text-dashboard-primaryText"
+                  : "hover:bg-dashboard-primary text-dashboard-primaryDarkText"
+              }`}
+            >
+              <Users
+                size={20}
+                className={`mr-3 ${
+                  location.pathname === "/admin/admins"
+                    ? "text-dashboard-secondary"
+                    : ""
+                }`}
+              />
+              Admins
             </Link>
           </li>
         </ul>

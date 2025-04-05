@@ -19,6 +19,15 @@ const ArtistCard: FC<ArtistCardProps> = ({ artist, size = "medium" }) => {
     large: "w-64 h-64",
   };
 
+  const formatListenCount = (count: number): string => {
+    if (count >= 1000000) {
+      return `${(count / 1000000).toFixed(1)}M listeners`;
+    } else if (count >= 1000) {
+      return `${(count / 1000).toFixed(1)}K listeners`;
+    }
+    return `${count} listeners`;
+  };
+
   return (
     <div className='group relative cursor-pointer w-[180px] sm:w-[220px] md:w-[240px] lg:w-[240px] mx-2'>
       <div
@@ -36,7 +45,7 @@ const ArtistCard: FC<ArtistCardProps> = ({ artist, size = "medium" }) => {
         </h3>
         {artist.listen_count && (
           <p className='text-gray-400 text-sm truncate'>
-            {artist.listen_count.toLocaleString()} listeners
+            {formatListenCount(artist.listen_count)} listeners
           </p>
         )}
       </div>

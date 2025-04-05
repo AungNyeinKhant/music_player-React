@@ -1,7 +1,7 @@
 import { FC } from "react";
 import AdminDashboard from "../../layouts/AdminDashboard";
 
-const Home: FC = () => {
+const Genres: FC = () => {
   return (
     <AdminDashboard>
       <div className='bg-dashboard-primary p-4 md:p-8 rounded-lg shadow-md'>
@@ -16,4 +16,4 @@ const Home: FC = () => {
   );
 };
 
-export default Home;
+export default Genres;

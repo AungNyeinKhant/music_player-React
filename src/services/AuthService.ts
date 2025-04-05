@@ -102,11 +102,13 @@ export const artistRegister = async (artistData: {
 //========================= admin =====================
 export const adminLogin = async (email: string, password: string) => {
   try {
-    const response = await adminAPI.post("/login", {
+    const response: any = await adminAPI.post("/auth/login", {
       email,
       password,
     });
-    console.log("adminLogin response:", response);
+    adminAPI.defaults.headers.common[
+      "Authorization"
+    ] = `Bearer ${response?.data?.data?.accessToken}`;
     return response;
   } catch (error) {
     console.error("adminLogin error:", error);
