@@ -10,6 +10,7 @@ import Favourates from "../../pages/customer/Favourates";
 import RecentlyPlays from "../../pages/customer/RecentlyPlays";
 import ArtistDetail from "../../pages/customer/ArtistDetail";
 import TrackProvider from "../../context/TrackContext";
+import Packages from "../../pages/customer/Packages";
 
 const AppRoutes: FC = () => {
   return (
@@ -29,6 +30,7 @@ const AppRoutes: FC = () => {
                   <Route path='/albums' element={<Albums />} />
                   <Route path='/favorites' element={<Favourates />} />
                   <Route path='/recent' element={<RecentlyPlays />} />
+                  <Route path='/subscription-packages' element={<Packages />} />
                 </Routes>
               </TrackProvider>
             </PrivateRoutes>

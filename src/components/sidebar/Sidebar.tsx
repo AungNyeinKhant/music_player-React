@@ -20,7 +20,11 @@ interface SidebarProps {
 
 const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
   const menuItems: SidebarItem[] = [
-    { icon: <Home className='w-6 h-6' />, label: "Home", path: "/app" },
+    {
+      icon: <Home className='w-6 h-6' />,
+      label: "Home",
+      path: "/app/subscription-packages",
+    },
     {
       icon: <LayoutGrid className='w-6 h-6' />,
       label: "Genres",
