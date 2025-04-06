@@ -1,5 +1,19 @@
 import axios from "axios";
 
+let navigateFunction: (path: string) => void = () => {
+  console.warn(
+    "Navigation handler not yet set. Ensure useNavigationSetup is called in a component."
+  );
+};
+
+export const setNavigationHandler = (handler: (path: string) => void) => {
+  navigateFunction = handler;
+};
+
+export const navigateTo = (path: string) => {
+  navigateFunction(path);
+};
+
 export const userAPI = axios.create({
   baseURL: "http://localhost:3000/api/user",
   headers: {
@@ -20,56 +34,3 @@ export const adminAPI = axios.create({
     "Content-Type": "application/json",
   },
 });
-
-/*
-// Interceptor for userAPI
-userAPI.interceptors.request.use(
-  (config: AxiosRequestConfig) => {
-    const token = localStorage.getItem("userAccessToken");
-    if (token) {
-      config.headers["Authorization"] = `Bearer ${token}`; // Use string index signature for type safety
-    }
-    return config;
-  },
-  (error: AxiosError) => {
-    return Promise.reject(error);
-  }
-);
-
-// Interceptor for artistAPI
-artistAPI.interceptors.request.use(
-  (config: AxiosRequestConfig) => {
-    const token = localStorage.getItem("artistAccessToken");
-    if (token) {
-      config.headers["Authorization"] = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error: AxiosError) => {
-    return Promise.reject(error);
-  }
-);
-
-// Interceptor for adminAPI
-adminAPI.interceptors.request.use(
-  (config: AxiosRequestConfig) => {
-    const token = localStorage.getItem("adminAccessToken");
-    if (token) {
-      config.headers["Authorization"] = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error: AxiosError) => {
-    return Promise.reject(error);
-  }
-);
-
-// You can also add response interceptors in the same way:
-userAPI.interceptors.response.use(
-  (response) => response,
-  (error: AxiosError) => {
-    // Handle user API specific errors
-    return Promise.reject(error);
-  }
-);
-*/

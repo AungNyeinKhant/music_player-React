@@ -64,6 +64,16 @@ const Packages = () => {
         Go Back
       </Link>
 
+      <div className='mb-8 text-center'>
+        <h1 className='text-3xl font-bold text-secondary mb-2'>
+          Subscription Packages
+        </h1>
+        <p className='text-primaryDarkText'>
+          Extend your subscription or get a new one to continue enjoying our
+          services
+        </p>
+      </div>
+
       <div className='min-h-[calc(50vh-8rem)] grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8'>
         {subspackages.map((pkg) => (
           <div
