@@ -1,4 +1,7 @@
+import { AuthContextType } from "../types";
 import { adminAPI, artistAPI, userAPI } from "./httpService";
+import { getRefreshToken } from "../utils/crypto";
+
 //========================= user =========================
 
 export const userLogin = async (email: string, password: string) => {
@@ -50,6 +53,7 @@ export const userRegister = async (userData: {
     throw error;
   }
 };
+
 //========================= artist ================
 export const artistLogin = async (email: string, password: string) => {
   try {
@@ -143,3 +147,11 @@ export const adminRegister = async (adminData: {
     throw error;
   }
 };
+
+export const logout = (auth:AuthContextType | null) =>{
+  localStorage.removeItem("refreshToken");
+  auth?.setUser(null);
+  userAPI.defaults.headers.common["Authorization"] = "";
+  artistAPI.defaults.headers.common["Authorization"] = ""
+  adminAPI.defaults.headers.common["Authorization"] = ""
+}

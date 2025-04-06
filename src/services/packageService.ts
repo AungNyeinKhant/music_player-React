@@ -1,5 +1,28 @@
-import { userAPI } from "./httpService";
+import { adminAPI, userAPI } from "./httpService";
 
+
+
+export const getPurchases = async (): Promise<any> => {
+  try {
+    const response = await adminAPI.get("/purchase");
+    return response;
+  } catch (error) {
+    console.error("Error fetching purchases:", error);
+    throw error;
+  }
+};
+
+export const handleStatus = async (purchaseId: string, reject?: boolean): Promise<any> => {
+  try {
+    const response = await adminAPI.post(`/purchase/handle`, {
+      purchase_id:purchaseId,
+      reject,
+    });
+    return response;
+  } catch (error) {
+    console.error("Error handling status:", error);
+}
+}
 export const getPackages = async (): Promise<any> => {
   try {
     const response = await userAPI.get("/packages");

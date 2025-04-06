@@ -1,5 +1,8 @@
 import React, { FC } from "react";
-import { ChevronDown, LogOut, Menu, X } from "lucide-react";
+import { ChevronDown, LogOut, Menu, X, User } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
+import { logout } from "../../services/AuthService";
 
 const DashHeader: FC<{
   isSidebarOpen: boolean;
@@ -7,6 +10,16 @@ const DashHeader: FC<{
   isProfileOpen: boolean;
   setIsProfileOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }> = ({ isSidebarOpen, setIsSidebarOpen, isProfileOpen, setIsProfileOpen }) => {
+  const navigate = useNavigate();
+  const auth = useAuth();
+
+  const handleLogout = async () => {
+    if (auth) {
+      await logout(auth);
+      navigate("/artist/auth/login");
+    }
+  };
+
   return (
     <header className='flex items-center justify-between p-4 bg-dashboard-primaryDark shadow-md'>
       <div className='flex items-center gap-4'>
@@ -41,7 +54,17 @@ const DashHeader: FC<{
 
         {isProfileOpen && (
           <div className='absolute right-0 mt-2 w-48 bg-dashboard-primaryDark rounded-md shadow-lg py-1 z-10'>
-            <button className='flex items-center w-full px-4 py-2 text-sm hover:bg-dashboard-primary'>
+            <button 
+              className='flex items-center w-full px-4 py-2 text-sm text-dashboard-primaryText hover:bg-dashboard-primary'
+              onClick={() => navigate("/artist/profile")}
+            >
+              <User size={16} className='mr-2' />
+              Profile
+            </button>
+            <button 
+              className='flex items-center w-full px-4 py-2 text-sm text-dashboard-primaryText hover:bg-dashboard-primary'
+              onClick={handleLogout}
+            >
               <LogOut size={16} className='mr-2' />
               Logout
             </button>

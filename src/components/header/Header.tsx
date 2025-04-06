@@ -1,12 +1,25 @@
-import { FC } from "react";
-import { Search, Menu } from "lucide-react";
-import { Link } from "react-router-dom";
+import { FC, useState } from "react";
+import { Search, Menu, User, LogOut, ChevronDown } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
+import { logout } from "../../services/AuthService";
 
 type HeaderProps = {
   onSidebarOpen: () => void;
 };
 
 const Header: FC<HeaderProps> = ({ onSidebarOpen }) => {
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const navigate = useNavigate();
+  const auth = useAuth();
+
+  const handleLogout = async () => {
+    if (auth) {
+      await logout(auth);
+      navigate("/login");
+    }
+  };
+
   return (
     <div className='flex items-center justify-between p-4 bg-primaryDark'>
       {/* Mobile Logo and Menu */}
@@ -35,15 +48,38 @@ const Header: FC<HeaderProps> = ({ onSidebarOpen }) => {
       </div>
 
       {/* User Profile */}
-      <div className='flex items-center'>
-        <div className='flex items-center'>
+      <div className='relative'>
+        <button
+          onClick={() => setIsProfileOpen(!isProfileOpen)}
+          className='flex items-center space-x-2 p-2 rounded-md hover:bg-[#282828] transition-colors'
+        >
           <img
             src='https://github.com/shadcn.png'
             alt='User'
             className='w-8 h-8 rounded-full'
           />
           <span className='text-primaryText mx-2 hidden sm:block'>Taylor</span>
-        </div>
+          <ChevronDown size={16} className="text-primaryText" />
+        </button>
+
+        {isProfileOpen && (
+          <div className='absolute right-0 mt-2 w-48 bg-primaryDark rounded-md shadow-lg py-1 z-10'>
+            <button 
+              className='flex items-center w-full px-4 py-2 text-sm text-primaryText hover:bg-[#282828]'
+              onClick={() => navigate("/profile")}
+            >
+              <User size={16} className='mr-2' />
+              Profile
+            </button>
+            <button 
+              className='flex items-center w-full px-4 py-2 text-sm text-primaryText hover:bg-[#282828]'
+              onClick={handleLogout}
+            >
+              <LogOut size={16} className='mr-2' />
+              Logout
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
