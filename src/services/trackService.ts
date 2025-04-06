@@ -47,9 +47,9 @@ export const mostPlayedTracksServ = async (limit: number) => {
 // ==================== artist =============================
 export const findTracksByAlbumId = async (albumId: string) => {
   try {
-    console.log("before findTracksByAlbumId: ", albumId);
+    
     const response = await artistAPI.get(`/tracks?album_id=${albumId}`);
-    console.log("after findTracksByAlbumId: ", response);
+    
     return response;
   } catch (error) {
     console.error("findTracksByAlbumId error:", error);

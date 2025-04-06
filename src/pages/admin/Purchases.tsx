@@ -132,7 +132,7 @@ const Purchases: FC = () => {
                                 
                                 const response = await handleStatus(purchase.id)
                                 if(response.status === 200){
-                                  console.log(`APPROVED ${purchase.id}`)
+                                  
                                   purchase.status = "APPROVED"
                                   setActiveDropdown(null)
                                 }
@@ -147,7 +147,7 @@ const Purchases: FC = () => {
                                 
                                 const response = await handleStatus(purchase.id,false)
                                 if(response.status === 200){
-                                  console.log(`REJECTED ${purchase.id}`)
+                                  
                                   purchase.status = "REJECTED"
                                   setActiveDropdown(null)
                                 }

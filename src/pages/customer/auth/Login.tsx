@@ -44,7 +44,7 @@ const Login: FC = () => {
 
       try {
         const response: any = await userLogin(values.email, values.password);
-
+        
         if (response.status === 400) {
           const errorMessage =
             response?.data?.data?.error ?? "Something went wrong";
@@ -58,6 +58,7 @@ const Login: FC = () => {
           id: response?.data?.data?.user.id,
           role: "user",
         });
+        
 
         navigate("/app");
       } catch (err) {

@@ -19,6 +19,7 @@ export const useTokenRefresh = (role: Role) => {
         const api = role === 'user' ? userAPI : role === 'artist' ? artistAPI : adminAPI;
         const response:any = await userAPI.post('/auth/refresh-token', { refreshToken });
         
+        
         if (response?.data?.data?.accessToken) {
           api.defaults.headers.common['Authorization'] = `Bearer ${response.data.data.accessToken}`;
           
@@ -35,8 +36,9 @@ export const useTokenRefresh = (role: Role) => {
       } catch (error) {
         console.error('Token refresh failed:', error);
         // Clear invalid tokens
-        // localStorage.removeItem('refreshToken');
-        console.log("removeItem from useTokenRefresh.ts" )
+        
+        localStorage.removeItem('refreshToken');
+        
         const api = role === 'user' ? userAPI : role === 'artist' ? artistAPI : adminAPI;
         api.defaults.headers.common['Authorization'] = '';
         
@@ -44,5 +46,5 @@ export const useTokenRefresh = (role: Role) => {
     };
 
     checkAndRefreshToken();
-  }, [role, navigate, auth]);
+  }, [role,  auth]);//[role, navigate, auth]
 }; 

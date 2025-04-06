@@ -10,6 +10,7 @@ export const userLogin = async (email: string, password: string) => {
       email,
       password,
     });
+    
 
     userAPI.defaults.headers.common[
       "Authorization"
@@ -42,7 +43,7 @@ export const userRegister = async (userData: {
         "Content-Type": "multipart/form-data",
       },
     });
-    console.log("userRegister response:", response);
+    
 
     userAPI.defaults.headers.common[
       "Authorization"
@@ -140,7 +141,7 @@ export const adminRegister = async (adminData: {
         "Content-Type": "multipart/form-data",
       },
     });
-    console.log("adminRegister response:", response);
+    
     return response;
   } catch (error) {
     console.error("adminRegister error:", error);
