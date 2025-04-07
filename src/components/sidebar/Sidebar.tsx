@@ -9,9 +9,10 @@ import {
   X,
   Plus,
 } from "lucide-react";
-import { SidebarItem, Playlist } from "../../types/index";
+import { SidebarItem } from "../../types/index";
 import Logo from "../../assets/image/music-player-logo.svg";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { usePlaylist } from "../../context/PlaylistContext";
 
 interface SidebarProps {
   isOpen: boolean;
@@ -52,12 +53,14 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
     },
   ];
 
-  const playlists: Playlist[] = [
-    { id: "1", name: "Rock & Roll" },
-    { id: "2", name: "Best of 90s" },
-    { id: "3", name: "Work Time" },
-    { id: "4", name: "Exercise mode" },
-  ];
+  const { playlists, loading, createNewPlaylist } = usePlaylist();
+
+  const handleCreatePlaylist = async () => {
+    const name = prompt("Enter playlist name:");
+    if (name) {
+      await createNewPlaylist(name);
+    }
+  };
 
   return (
     <>
@@ -119,20 +122,29 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
                 <h2 className='text-gray-400 uppercase text-sm font-bold'>
                   Playlists
                 </h2>
-                <button className='p-1 hover:bg-[#282828] rounded-lg'>
+                <button
+                  className='p-1 hover:bg-[#282828] rounded-lg'
+                  onClick={handleCreatePlaylist}
+                >
                   <Plus className='w-5 h-5 text-gray-400 hover:text-primaryText' />
                 </button>
               </div>
               <div className='space-y-2'>
-                {playlists.map((playlist) => (
-                  <Link
-                    key={playlist.id}
-                    to={`/playlist/${playlist.id}`}
-                    className='flex items-center text-gray-400 hover:text-primaryText py-2 text-sm'
-                  >
-                    {playlist.name}
-                  </Link>
-                ))}
+                {loading ? (
+                  <div className='text-gray-400 text-sm'>
+                    Loading playlists...
+                  </div>
+                ) : (
+                  playlists.map((playlist) => (
+                    <Link
+                      key={playlist.id}
+                      to={`/playlist/${playlist.id}`}
+                      className='flex items-center text-gray-400 hover:text-primaryText py-2 text-sm'
+                    >
+                      {playlist.name}
+                    </Link>
+                  ))
+                )}
               </div>
             </div>
           </div>

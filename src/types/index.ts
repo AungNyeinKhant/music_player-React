@@ -78,4 +78,5 @@ export type TrackContextType = {
   handleVolumeChange: (e: React.MouseEvent<HTMLDivElement>) => void;
   formatTime: (time: number) => string;
   handleNextTrack: () => void;
+  handlePreviousTrack: () => void;
 };

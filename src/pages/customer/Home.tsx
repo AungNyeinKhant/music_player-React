@@ -1,6 +1,7 @@
 import { FC, useState, useEffect } from "react";
 import MusicCard from "../../components/cards/MusicCard";
 import PlaylistCard from "../../components/cards/PlaylistCard";
+import AddToPlaylist from "./AddToPlaylist";
 import {
   Track,
   PlaylistCard as PlaylistCardType,
@@ -27,6 +28,8 @@ const Home: FC = () => {
   const [mostPlayedTracks, setMostPlayedTracks] = useState<Track[] | null>(
     null
   );
+  const [isAddToPlaylistOpen, setIsAddToPlaylistOpen] = useState(false);
+  const [selectedTrack, setSelectedTrack] = useState<Track | null>(null);
   const fetchRecentTracks = async () => {
     try {
       const response: any = await recentTracks(20);
@@ -194,7 +197,8 @@ const Home: FC = () => {
 
                       <button
                         onClick={() => {
-                          alert(track.id);
+                          setSelectedTrack(track);
+                          setIsAddToPlaylistOpen(true);
                         }}
                         className='w-8 h-8 rounded-full bg-secondary items-center justify-center flex hover:bg-opacity-80'
                       >
@@ -268,6 +272,18 @@ const Home: FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Add to Playlist Modal */}
+      {selectedTrack && (
+        <AddToPlaylist
+          isOpen={isAddToPlaylistOpen}
+          onClose={() => {
+            setIsAddToPlaylistOpen(false);
+            setSelectedTrack(null);
+          }}
+          track={selectedTrack}
+        />
+      )}
     </Template>
   );
 };

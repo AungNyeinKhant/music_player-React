@@ -7,6 +7,7 @@ import {
   useEffect,
 } from "react";
 import { Track, TrackContextFormat, TrackContextType } from "../types";
+import { playTrack } from "../services/trackService";
 
 export const TrackContext = createContext<TrackContextType | null>(null);
 
@@ -68,6 +69,13 @@ export default function TrackProvider({ children }: { children: ReactNode }) {
       audioRef.current.src = chosenTrack.playTrack?.audio || "";
       audioRef.current.play();
       setIsPlaying(true);
+
+      // Call playTrack service to update play count
+      if (chosenTrack.playTrack?.id) {
+        playTrack(chosenTrack.playTrack.id).catch((error) => {
+          console.error("Error updating play count:", error);
+        });
+      }
     }
   }, [chosenTrack]);
 
@@ -124,6 +132,22 @@ export default function TrackProvider({ children }: { children: ReactNode }) {
     });
   };
 
+  const handlePreviousTrack = () => {
+    if (!chosenTrack?.queTracks || !chosenTrack.playTrack) return;
+
+    const currentIndex = findTrackIndex(
+      chosenTrack.queTracks,
+      chosenTrack.playTrack
+    );
+    const previousIndex =
+      currentIndex === 0 ? chosenTrack.queTracks.length - 1 : currentIndex - 1;
+
+    setChosenTrack({
+      playTrack: chosenTrack.queTracks[previousIndex],
+      queTracks: chosenTrack.queTracks,
+    });
+  };
+
   const value: TrackContextType = {
     chosenTrack,
     setChosenTrack,
@@ -136,6 +160,7 @@ export default function TrackProvider({ children }: { children: ReactNode }) {
     handleVolumeChange,
     formatTime,
     handleNextTrack,
+    handlePreviousTrack,
   };
 
   return (

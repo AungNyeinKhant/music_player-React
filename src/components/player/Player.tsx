@@ -23,6 +23,7 @@ const Player: FC = () => {
     handleVolumeChange,
     formatTime,
     handleNextTrack,
+    handlePreviousTrack,
   } = useTrack()!;
   return (
     <div className='fixed bottom-0 left-0 right-0 bg-primary border-t border-[#282828] p-4 z-50'>
@@ -46,7 +47,10 @@ const Player: FC = () => {
         <div className='flex flex-col items-center w-[40%]'>
           <div className='flex items-center gap-4'>
             <Shuffle className='w-5 h-5 text-gray-400 hover:text-primaryText cursor-pointer' />
-            <SkipBack className='w-5 h-5 text-gray-400 hover:text-primaryText cursor-pointer' />
+            <SkipBack
+              className='w-5 h-5 text-gray-400 hover:text-primaryText cursor-pointer'
+              onClick={handlePreviousTrack}
+            />
             <div
               className='w-8 h-8 rounded-full bg-white flex items-center justify-center cursor-pointer'
               onClick={togglePlay}
