@@ -1,11 +1,12 @@
-import { createContext, ReactNode, useContext, useState } from "react";
 import {
-  AuthContextType,
-  Track,
-  TrackContextFormat,
-  TrackContextType,
-  UserAuth,
-} from "../types";
+  createContext,
+  ReactNode,
+  useContext,
+  useState,
+  useRef,
+  useEffect,
+} from "react";
+import { Track, TrackContextFormat, TrackContextType } from "../types";
 
 export const TrackContext = createContext<TrackContextType | null>(null);
 
@@ -13,16 +14,100 @@ export default function TrackProvider({ children }: { children: ReactNode }) {
   const [chosenTrack, setChosenTrack] = useState<TrackContextFormat | null>(
     null
   );
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [volume, setVolume] = useState(0.7);
+  const audioRef = useRef<HTMLAudioElement>(null);
 
-  // Create value object
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    const handleVisibilityChange = () => {
+      if (!document.hidden && isPlaying) {
+        audio.play();
+      }
+    };
+
+    const handleTimeUpdate = () => setCurrentTime(audio.currentTime);
+    const handleLoadedMetadata = () => setDuration(audio.duration);
+
+    audio.addEventListener("timeupdate", handleTimeUpdate);
+    audio.addEventListener("loadedmetadata", handleLoadedMetadata);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    return () => {
+      audio.removeEventListener("timeupdate", handleTimeUpdate);
+      audio.removeEventListener("loadedmetadata", handleLoadedMetadata);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, [isPlaying]);
+
+  useEffect(() => {
+    if (chosenTrack && audioRef.current) {
+      audioRef.current.src = chosenTrack.playTrack?.audio || "";
+      audioRef.current.play();
+      setIsPlaying(true);
+    }
+  }, [chosenTrack]);
+
+  const togglePlay = () => {
+    if (!audioRef.current || !chosenTrack) return;
+    if (isPlaying) {
+      audioRef.current.pause();
+    } else {
+      audioRef.current.play();
+    }
+    setIsPlaying(!isPlaying);
+  };
+
+  const handleProgressChange = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!audioRef.current) return;
+    const progressBar = e.currentTarget;
+    const clickPosition = e.clientX - progressBar.getBoundingClientRect().left;
+    const percentageClicked = clickPosition / progressBar.offsetWidth;
+    const newTime = percentageClicked * duration;
+    audioRef.current.currentTime = newTime;
+    setCurrentTime(newTime);
+  };
+
+  const handleVolumeChange = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!audioRef.current) return;
+    const volumeBar = e.currentTarget;
+    const clickPosition = e.clientX - volumeBar.getBoundingClientRect().left;
+    const newVolume = Math.max(
+      0,
+      Math.min(1, clickPosition / volumeBar.offsetWidth)
+    );
+    audioRef.current.volume = newVolume;
+    setVolume(newVolume);
+  };
+
+  const formatTime = (time: number) => {
+    const minutes = Math.floor(time / 60);
+    const seconds = Math.floor(time % 60);
+    return `${minutes}:${seconds.toString().padStart(2, "0")}`;
+  };
+
   const value: TrackContextType = {
     chosenTrack,
     setChosenTrack,
-    // Add other properties and methods
+    isPlaying,
+    currentTime,
+    duration,
+    volume,
+    togglePlay,
+    handleProgressChange,
+    handleVolumeChange,
+    formatTime,
   };
 
   return (
-    <TrackContext.Provider value={value}>{children}</TrackContext.Provider>
+    <TrackContext.Provider value={value}>
+      {children}
+      <audio ref={audioRef} preload='metadata' />
+    </TrackContext.Provider>
   );
 }
 

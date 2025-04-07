@@ -69,4 +69,12 @@ export type TrackContextType = {
   setChosenTrack: React.Dispatch<
     React.SetStateAction<TrackContextFormat | null>
   >;
+  isPlaying: boolean;
+  currentTime: number;
+  duration: number;
+  volume: number;
+  togglePlay: () => void;
+  handleProgressChange: (e: React.MouseEvent<HTMLDivElement>) => void;
+  handleVolumeChange: (e: React.MouseEvent<HTMLDivElement>) => void;
+  formatTime: (time: number) => string;
 };
