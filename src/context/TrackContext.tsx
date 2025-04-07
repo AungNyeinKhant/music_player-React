@@ -10,6 +10,10 @@ import { Track, TrackContextFormat, TrackContextType } from "../types";
 
 export const TrackContext = createContext<TrackContextType | null>(null);
 
+const findTrackIndex = (tracks: Track[], targetTrack: Track): number => {
+  return tracks.findIndex((track) => track.id === targetTrack.id);
+};
+
 export default function TrackProvider({ children }: { children: ReactNode }) {
   const [chosenTrack, setChosenTrack] = useState<TrackContextFormat | null>(
     null
@@ -32,17 +36,32 @@ export default function TrackProvider({ children }: { children: ReactNode }) {
 
     const handleTimeUpdate = () => setCurrentTime(audio.currentTime);
     const handleLoadedMetadata = () => setDuration(audio.duration);
+    const handleEnded = () => {
+      if (chosenTrack?.queTracks && chosenTrack.playTrack) {
+        const currentIndex = findTrackIndex(
+          chosenTrack.queTracks,
+          chosenTrack.playTrack
+        );
+        const nextIndex = (currentIndex + 1) % chosenTrack.queTracks.length;
+        setChosenTrack({
+          playTrack: chosenTrack.queTracks[nextIndex],
+          queTracks: chosenTrack.queTracks,
+        });
+      }
+    };
 
     audio.addEventListener("timeupdate", handleTimeUpdate);
     audio.addEventListener("loadedmetadata", handleLoadedMetadata);
+    audio.addEventListener("ended", handleEnded);
     document.addEventListener("visibilitychange", handleVisibilityChange);
 
     return () => {
       audio.removeEventListener("timeupdate", handleTimeUpdate);
       audio.removeEventListener("loadedmetadata", handleLoadedMetadata);
+      audio.removeEventListener("ended", handleEnded);
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
-  }, [isPlaying]);
+  }, [isPlaying, chosenTrack]);
 
   useEffect(() => {
     if (chosenTrack && audioRef.current) {
@@ -90,6 +109,21 @@ export default function TrackProvider({ children }: { children: ReactNode }) {
     return `${minutes}:${seconds.toString().padStart(2, "0")}`;
   };
 
+  const handleNextTrack = () => {
+    if (!chosenTrack?.queTracks || !chosenTrack.playTrack) return;
+
+    const currentIndex = findTrackIndex(
+      chosenTrack.queTracks,
+      chosenTrack.playTrack
+    );
+    const nextIndex = (currentIndex + 1) % chosenTrack.queTracks.length;
+
+    setChosenTrack({
+      playTrack: chosenTrack.queTracks[nextIndex],
+      queTracks: chosenTrack.queTracks,
+    });
+  };
+
   const value: TrackContextType = {
     chosenTrack,
     setChosenTrack,
@@ -101,6 +135,7 @@ export default function TrackProvider({ children }: { children: ReactNode }) {
     handleProgressChange,
     handleVolumeChange,
     formatTime,
+    handleNextTrack,
   };
 
   return (

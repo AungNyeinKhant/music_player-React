@@ -22,6 +22,7 @@ const Player: FC = () => {
     handleProgressChange,
     handleVolumeChange,
     formatTime,
+    handleNextTrack,
   } = useTrack()!;
   return (
     <div className='fixed bottom-0 left-0 right-0 bg-primary border-t border-[#282828] p-4 z-50'>
@@ -56,7 +57,10 @@ const Player: FC = () => {
                 <Play className='w-5 h-5 text-black' />
               )}
             </div>
-            <SkipForward className='w-5 h-5 text-gray-400 hover:text-primaryText cursor-pointer' />
+            <SkipForward
+              className='w-5 h-5 text-gray-400 hover:text-primaryText cursor-pointer'
+              onClick={handleNextTrack}
+            />
             <Repeat className='w-5 h-5 text-gray-400 hover:text-primaryText cursor-pointer' />
           </div>
           <div className='flex items-center gap-2 w-full mt-2'>
@@ -91,7 +95,6 @@ const Player: FC = () => {
           </div>
         </div>
       </div>
-
     </div>
   );
 };

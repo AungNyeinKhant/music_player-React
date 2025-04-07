@@ -161,7 +161,7 @@ const Home: FC = () => {
                           if (response.data.success) {
                             chosenTracks?.setChosenTrack({
                               playTrack: track,
-                              queTracks: recentPlayTracks,
+                              queTracks: newTrendingTracks,
                             });
                           }
                         } catch (error) {
@@ -231,7 +231,7 @@ const Home: FC = () => {
                             if (response.data.success) {
                               chosenTracks?.setChosenTrack({
                                 playTrack: track,
-                                queTracks: recentPlayTracks,
+                                queTracks: mostPlayedTracks,
                               });
                             }
                           } catch (error) {
