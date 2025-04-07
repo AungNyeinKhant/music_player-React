@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { Track } from "../../types";
-import { Heart, MoreVertical } from "lucide-react";
+import { MoreVertical } from "lucide-react";
 import NoImage from "../../assets/image/no-album-image.svg";
 
 type MusicCardProps = {
@@ -45,12 +45,6 @@ const MusicCard: FC<MusicCardProps> = ({
           className='w-full h-full object-cover transform transition-transform group-hover:scale-105'
         />
         <div className='absolute top-2 right-2 flex gap-2'>
-          <div
-            onClick={handleFavoriteClick}
-            className='p-2 rounded-full bg-black bg-opacity-50 hover:bg-opacity-70 text-white transition-all'
-          >
-            <Heart size={16} />
-          </div>
           <div
             onClick={handleMenuClick}
             className='p-2 rounded-full bg-black bg-opacity-50 hover:bg-opacity-70 text-white transition-all'

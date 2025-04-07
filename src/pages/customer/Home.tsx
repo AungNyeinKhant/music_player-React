@@ -9,7 +9,7 @@ import {
 } from "../../types";
 import NoImage from "../../assets/image/no-album-image.svg";
 
-import { Heart, MoreVertical } from "lucide-react";
+import { MoreVertical } from "lucide-react";
 import Template from "../../layouts/Template";
 import {
   recentTracks,
@@ -191,14 +191,7 @@ const Home: FC = () => {
                       <span className='text-gray-400 text-sm'>
                         {track.listen_count.toLocaleString()} streams
                       </span>
-                      <button
-                        onClick={() => {
-                          alert(track.id);
-                        }}
-                        className='w-8 h-8 rounded-full bg-secondary items-center justify-center flex hover:bg-opacity-80'
-                      >
-                        <Heart className='w-4 h-4 text-primary' />
-                      </button>
+
                       <button
                         onClick={() => {
                           alert(track.id);

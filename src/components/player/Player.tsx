@@ -23,23 +23,29 @@ const Player: FC = () => {
     const audio = audioRef.current;
     if (!audio) return;
 
+    const handleVisibilityChange = () => {
+      if (!document.hidden && isPlaying) {
+        audio.play();
+      }
+    };
+
     const handleTimeUpdate = () => setCurrentTime(audio.currentTime);
     const handleLoadedMetadata = () => setDuration(audio.duration);
 
     audio.addEventListener("timeupdate", handleTimeUpdate);
     audio.addEventListener("loadedmetadata", handleLoadedMetadata);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
 
     return () => {
       audio.removeEventListener("timeupdate", handleTimeUpdate);
       audio.removeEventListener("loadedmetadata", handleLoadedMetadata);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
-  }, []);
+  }, [isPlaying]);
 
   useEffect(() => {
     if (selectedTrack && audioRef.current) {
       audioRef.current.src = selectedTrack.chosenTrack?.playTrack?.audio || "";
-      audioRef.current.play();
-      setIsPlaying(true);
     }
   }, [selectedTrack]);
 

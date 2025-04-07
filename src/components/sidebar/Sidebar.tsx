@@ -23,7 +23,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
     {
       icon: <Home className='w-6 h-6' />,
       label: "Home",
-      path: "/app/subscription-packages",
+      path: "/app",
     },
     {
       icon: <LayoutGrid className='w-6 h-6' />,
