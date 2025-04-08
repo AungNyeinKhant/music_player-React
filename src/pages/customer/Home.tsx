@@ -5,7 +5,6 @@ import AddToPlaylist from "./AddToPlaylist";
 import {
   Track,
   PlaylistCard as PlaylistCardType,
-  TrendingTrack,
   TrackContextType,
 } from "../../types";
 import NoImage from "../../assets/image/no-album-image.svg";

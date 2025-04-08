@@ -10,10 +10,18 @@ import {
   getPlaylists,
   playlistHandleTrack,
 } from "../services/playlistService";
+import { Track } from "../types";
+
+interface PlaylistTrack {
+  track_id: string;
+  track: Track;
+}
 
 interface Playlist {
   id: string;
   name: string;
+
+  playlist_tracks: PlaylistTrack[];
 }
 
 interface PlaylistContextType {

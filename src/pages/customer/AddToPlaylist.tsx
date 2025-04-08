@@ -16,8 +16,19 @@ const AddToPlaylist: React.FC<AddToPlaylistProps> = ({
   track,
 }) => {
   const { playlists } = usePlaylist();
-  const [selectedPlaylists, setSelectedPlaylists] = useState<string[]>([]);
+  const [selectedPlaylists, setSelectedPlaylists] = useState<string[]>(() => {
+    return playlists
+      .filter((playlist) =>
+        playlist.playlist_tracks.some((pt) => pt.track_id === track.id)
+      )
+      .map((playlist) => playlist.id);
+  });
+  const [initialPlaylists, setInitialPlaylists] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+
+  React.useEffect(() => {
+    setInitialPlaylists(selectedPlaylists);
+  }, []);
 
   const handleCheckboxChange = (playlistId: string) => {
     setSelectedPlaylists((prev) =>
@@ -30,14 +41,22 @@ const AddToPlaylist: React.FC<AddToPlaylistProps> = ({
   const handleSubmit = async () => {
     setIsLoading(true);
     try {
+      const addedPlaylists = selectedPlaylists.filter(
+        (id) => !initialPlaylists.includes(id)
+      );
+      const removedPlaylists = initialPlaylists.filter(
+        (id) => !selectedPlaylists.includes(id)
+      );
+
+      const changes = [...addedPlaylists, ...removedPlaylists];
       await Promise.all(
-        selectedPlaylists.map(async (playlistId) => {
-          const response = await playlistHandleTrack(playlistId, track.id);
+        changes.map(async (playlistId) => {
+          await playlistHandleTrack(playlistId, track.id);
         })
       );
       onClose();
     } catch (error) {
-      console.error("Error adding track to playlists:", error);
+      console.error("Error updating playlists:", error);
     } finally {
       setIsLoading(false);
     }
