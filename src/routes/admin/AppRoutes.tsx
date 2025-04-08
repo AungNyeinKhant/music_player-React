@@ -2,32 +2,33 @@ import { FC } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import AuthRoutes from "./AuthRoutes";
 
-import Home from "../../pages/customer/Home";
-import Genres from "../../pages/customer/Genres";
-import Artists from "../../pages/customer/Artists";
-import Albums from "../../pages/customer/Albums";
-import Favourates from "../../pages/customer/Favourates";
-import RecentlyPlays from "../../pages/customer/RecentlyPlays";
-import ArtistDetail from "../../pages/customer/ArtistDetail";
 import PrivateRoutes from "../PrivateRoutes";
+import Register from "../../pages/admin/auth/Register";
+import Home from "../../pages/admin/Home";
+import Analysis from "../../pages/admin/Analysis";
+import Genres from "../../pages/admin/Genres";
+import Packages from "../../pages/admin/Packages";
+import Purchases from "../../pages/admin/Purchases";
+import Admins from "../../pages/admin/Admins";
 
 const AdminAppRoutes: FC = () => {
   return (
     <Router>
       <Routes>
-        {/* <Route path='/auth/*' element={<AuthRoutes />} /> */}
+        <Route path='/admin/auth/*' element={<AuthRoutes />} />
         <Route
           path='/admin/*'
           element={
             <PrivateRoutes role='admin'>
               <Routes>
+                <Route path='/register' element={<Register />} />
+
                 <Route index path='/' element={<Home />} />
+                <Route path='/analysis-view' element={<Analysis />} />
                 <Route path='/genres' element={<Genres />} />
-                <Route path='/artists' element={<Artists />} />
-                <Route path='/artist-detail' element={<ArtistDetail />} />
-                <Route path='/albums' element={<Albums />} />
-                <Route path='/favorites' element={<Favourates />} />
-                <Route path='/recent' element={<RecentlyPlays />} />
+                <Route path='/packages' element={<Packages />} />
+                <Route path='/purchases' element={<Purchases />} />
+                <Route path='/admins' element={<Admins />} />
               </Routes>
             </PrivateRoutes>
           }

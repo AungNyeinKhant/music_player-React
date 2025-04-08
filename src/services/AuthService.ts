@@ -1,4 +1,7 @@
+import { AuthContextType } from "../types";
 import { adminAPI, artistAPI, userAPI } from "./httpService";
+import { getRefreshToken } from "../utils/crypto";
+
 //========================= user =========================
 
 export const userLogin = async (email: string, password: string) => {
@@ -7,7 +10,8 @@ export const userLogin = async (email: string, password: string) => {
       email,
       password,
     });
-    console.log("userLogin response:", response);
+    
+
     userAPI.defaults.headers.common[
       "Authorization"
     ] = `Bearer ${response?.data?.data?.accessToken}`;
@@ -23,7 +27,7 @@ export const userRegister = async (userData: {
   email: string;
   password: string;
   phone: string;
-  dateOfBirth?: string;
+  dob?: string;
   image?: File;
 }) => {
   try {
@@ -34,18 +38,23 @@ export const userRegister = async (userData: {
       }
     });
 
-    const response = await userAPI.post("/register", formData, {
+    const response: any = await userAPI.post("/auth/register", formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
     });
-    console.log("userRegister response:", response);
+    
+
+    userAPI.defaults.headers.common[
+      "Authorization"
+    ] = `Bearer ${response?.data?.data?.accessToken}`;
     return response;
   } catch (error) {
     console.error("userRegister error:", error);
     throw error;
   }
 };
+
 //========================= artist ================
 export const artistLogin = async (email: string, password: string) => {
   try {
@@ -98,11 +107,13 @@ export const artistRegister = async (artistData: {
 //========================= admin =====================
 export const adminLogin = async (email: string, password: string) => {
   try {
-    const response = await adminAPI.post("/login", {
+    const response: any = await adminAPI.post("/auth/login", {
       email,
       password,
     });
-    console.log("adminLogin response:", response);
+    adminAPI.defaults.headers.common[
+      "Authorization"
+    ] = `Bearer ${response?.data?.data?.accessToken}`;
     return response;
   } catch (error) {
     console.error("adminLogin error:", error);
@@ -130,10 +141,18 @@ export const adminRegister = async (adminData: {
         "Content-Type": "multipart/form-data",
       },
     });
-    console.log("adminRegister response:", response);
+    
     return response;
   } catch (error) {
     console.error("adminRegister error:", error);
     throw error;
   }
 };
+
+export const logout = (auth:AuthContextType | null) =>{
+  localStorage.removeItem("refreshToken");
+  auth?.setUser(null);
+  userAPI.defaults.headers.common["Authorization"] = "";
+  artistAPI.defaults.headers.common["Authorization"] = ""
+  adminAPI.defaults.headers.common["Authorization"] = ""
+}

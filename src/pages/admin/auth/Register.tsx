@@ -1,7 +1,7 @@
 import { FC } from "react";
 
 const Register: FC = () => {
-  return <></>;
+  return <>Hi register</>;
 };
 
 export default Register;

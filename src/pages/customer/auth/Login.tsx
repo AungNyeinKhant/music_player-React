@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../../context/AuthContext";
 import { storeRefreshToken } from "../../../utils/crypto";
 import Logo from "../../../assets/image/music-player-logo.svg";
+import { useTokenRefresh } from "../../../hooks/useTokenRefresh";
 
 const Login: FC = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -14,6 +15,9 @@ const Login: FC = () => {
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
   const auth = useAuth();
+
+  // Check for existing refresh token and attempt to refresh
+  useTokenRefresh('user');
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -40,7 +44,7 @@ const Login: FC = () => {
 
       try {
         const response: any = await userLogin(values.email, values.password);
-
+        
         if (response.status === 400) {
           const errorMessage =
             response?.data?.data?.error ?? "Something went wrong";
@@ -54,6 +58,7 @@ const Login: FC = () => {
           id: response?.data?.data?.user.id,
           role: "user",
         });
+        
 
         navigate("/app");
       } catch (err) {

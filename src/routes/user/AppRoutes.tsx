@@ -10,6 +10,8 @@ import Favourates from "../../pages/customer/Favourates";
 import RecentlyPlays from "../../pages/customer/RecentlyPlays";
 import ArtistDetail from "../../pages/customer/ArtistDetail";
 import TrackProvider from "../../context/TrackContext";
+import Packages from "../../pages/customer/Packages";
+import { PlaylistProvider } from "../../context/PlaylistContext";
 
 const AppRoutes: FC = () => {
   return (
@@ -21,15 +23,21 @@ const AppRoutes: FC = () => {
           element={
             <PrivateRoutes role={"user"}>
               <TrackProvider>
-                <Routes>
-                  <Route index path='/' element={<Home />} />
-                  <Route path='/genres' element={<Genres />} />
-                  <Route path='/artists' element={<Artists />} />
-                  <Route path='/artist-detail' element={<ArtistDetail />} />
-                  <Route path='/albums' element={<Albums />} />
-                  <Route path='/favorites' element={<Favourates />} />
-                  <Route path='/recent' element={<RecentlyPlays />} />
-                </Routes>
+                <PlaylistProvider>
+                  <Routes>
+                    <Route index path='/' element={<Home />} />
+                    <Route path='/genres' element={<Genres />} />
+                    <Route path='/artists' element={<Artists />} />
+                    <Route path='/artist-detail' element={<ArtistDetail />} />
+                    <Route path='/albums' element={<Albums />} />
+                    <Route path='/favorites' element={<Favourates />} />
+                    <Route path='/recent' element={<RecentlyPlays />} />
+                    <Route
+                      path='/subscription-packages'
+                      element={<Packages />}
+                    />
+                  </Routes>
+                </PlaylistProvider>
               </TrackProvider>
             </PrivateRoutes>
           }

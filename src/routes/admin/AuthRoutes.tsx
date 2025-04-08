@@ -1,13 +1,11 @@
 import { FC } from "react";
 import { Routes, Route } from "react-router-dom";
-import Login from "../../pages/customer/auth/Login";
-import Register from "../../pages/customer/auth/Register";
+import Login from "../../pages/admin/auth/Login";
 
 const AdminAuthRoutes: FC = () => {
   return (
     <Routes>
       <Route index path='/login' element={<Login />} />
-      <Route path='/register' element={<Register />} />
     </Routes>
   );
 };
