@@ -1,60 +1,58 @@
-import { FC, useState } from "react";
+import { FC } from "react";
 import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
-  PointElement,
-  LineElement,
+  BarElement,
   Title,
   Tooltip,
   Legend,
 } from "chart.js";
-import { Line } from "react-chartjs-2";
-import { Calendar } from "lucide-react";
-import { string } from "yup";
+import { Bar } from "react-chartjs-2";
 
 // Register ChartJS components
 ChartJS.register(
   CategoryScale,
   LinearScale,
-  PointElement,
-  LineElement,
+  BarElement,
   Title,
   Tooltip,
   Legend
 );
 
-interface LineChartProps {
-  labels: string[];
+interface Dataset {
+  label: string;
   data: number[];
+  backgroundColor: string;
+}
+
+interface StackBarChartProps {
+  labels: string[];
+  datasets: Dataset[];
   title: string;
   xAxisTitle: string;
   yAxisTitle: string;
 }
 
-const LineChart: FC<LineChartProps> = ({
+const StackBarChart: FC<StackBarChartProps> = ({
   labels,
-  data,
+  datasets,
   title,
   xAxisTitle,
   yAxisTitle,
 }) => {
   const chartData = {
     labels,
-    datasets: [
-      {
-        label: title,
-        data,
-        borderColor: "#3b82f6",
-        backgroundColor: "rgba(59, 130, 246, 0.5)",
-        tension: 0.4,
-      },
-    ],
+    datasets: datasets.map((dataset) => ({
+      ...dataset,
+      borderColor: "#3b82f6",
+    })),
   };
 
   const options = {
     responsive: true,
     maintainAspectRatio: false,
+
     plugins: {
       legend: {
         position: "top" as const,
@@ -73,6 +71,7 @@ const LineChart: FC<LineChartProps> = ({
     },
     scales: {
       x: {
+        stacked: true,
         title: {
           display: true,
           text: xAxisTitle,
@@ -86,6 +85,7 @@ const LineChart: FC<LineChartProps> = ({
         },
       },
       y: {
+        stacked: true,
         title: {
           display: true,
           text: yAxisTitle,
@@ -102,10 +102,10 @@ const LineChart: FC<LineChartProps> = ({
   };
 
   return (
-    <div className='relative min-h-[400px] w-full'>
-      <Line data={chartData} options={options} />
+    <div className='relative min-h-[400px] w-full '>
+      <Bar data={chartData} options={options} />
     </div>
   );
 };
 
-export default LineChart;
+export default StackBarChart;

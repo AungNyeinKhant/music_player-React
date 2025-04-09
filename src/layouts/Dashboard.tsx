@@ -34,7 +34,7 @@ const Dashboard: FC<{ children: ReactNode }> = ({ children }) => {
 
       {/* Footer */}
       <footer className='p-4 bg-dashboard-primaryDark text-dashboard-primaryDarkText text-center'>
-        <p>@2025 Legacy Music Entertainment CopyRight by ANK</p>
+        <p>@2025 Legacy Music Entertainment &copy; Copyright by ANK</p>
       </footer>
     </div>
   );
