@@ -18,6 +18,7 @@ type ApiResponse = {
 
 const Analysis: FC = () => {
   const [activeTab, setActiveTab] = useState<"genres" | "albums" | "artists">("genres");
+  const [startDate, setStartDate] = useState<Date | null>(new Date());
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [chartData, setChartData] = useState<{
@@ -74,11 +75,13 @@ const Analysis: FC = () => {
 
   useEffect(() => {
     const fetchData = async () => {
+      if (!startDate) return;
+      
       setLoading(true);
       setError(null);
 
       try {
-        const date = new Date().toISOString().split('T')[0];
+        const date = startDate.toISOString().split('T')[0];
         let response: any;
 
         switch (activeTab) {
@@ -106,7 +109,7 @@ const Analysis: FC = () => {
     };
 
     fetchData();
-  }, [activeTab]);
+  }, [activeTab, startDate]);
 
   const getActiveData = () => {
     switch (activeTab) {
@@ -146,37 +149,51 @@ const Analysis: FC = () => {
         </div>
 
         <div className='bg-dashboard-primary p-6 rounded-lg'>
-          <div className='flex space-x-4 mb-6'>
-            <button
-              onClick={() => setActiveTab("genres")}
-              className={`px-4 py-2 rounded ${
-                activeTab === "genres"
-                  ? "bg-dashboard-secondary text-dashboard-secondaryText"
-                  : "text-gray-600"
-              }`}
-            >
-              Genres
-            </button>
-            <button
-              onClick={() => setActiveTab("albums")}
-              className={`px-4 py-2 rounded ${
-                activeTab === "albums"
-                  ? "bg-dashboard-secondary text-dashboard-secondaryText"
-                  : "text-gray-600"
-              }`}
-            >
-              Albums
-            </button>
-            <button
-              onClick={() => setActiveTab("artists")}
-              className={`px-4 py-2 rounded ${
-                activeTab === "artists"
-                  ? "bg-dashboard-secondary text-dashboard-secondaryText"
-                  : "text-gray-600"
-              }`}
-            >
-              Artists
-            </button>
+          <div className='flex justify-between items-center mb-6'>
+            <div className='flex space-x-4'>
+              <button
+                onClick={() => setActiveTab("genres")}
+                className={`px-4 py-2 rounded ${
+                  activeTab === "genres"
+                    ? "bg-dashboard-secondary text-dashboard-secondaryText"
+                    : "text-gray-600"
+                }`}
+              >
+                Genres
+              </button>
+              <button
+                onClick={() => setActiveTab("albums")}
+                className={`px-4 py-2 rounded ${
+                  activeTab === "albums"
+                    ? "bg-dashboard-secondary text-dashboard-secondaryText"
+                    : "text-gray-600"
+                }`}
+              >
+                Albums
+              </button>
+              <button
+                onClick={() => setActiveTab("artists")}
+                className={`px-4 py-2 rounded ${
+                  activeTab === "artists"
+                    ? "bg-dashboard-secondary text-dashboard-secondaryText"
+                    : "text-gray-600"
+                }`}
+              >
+                Artists
+              </button>
+            </div>
+            <div className='flex items-center gap-2'>
+              <input
+                type='date'
+                value={startDate ? startDate.toISOString().split("T")[0] : ""}
+                onChange={(e) =>
+                  setStartDate(
+                    e.target.value ? new Date(e.target.value) : null
+                  )
+                }
+                className='bg-gray-700 text-gray-200 px-3 py-1 rounded-md border border-gray-600 focus:outline-none focus:border-gray-500'
+              />
+            </div>
           </div>
 
           {error ? (
