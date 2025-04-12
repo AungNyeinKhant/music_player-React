@@ -1,5 +1,5 @@
 import { FC, useState } from "react";
-import { Search, Menu, User, Package, LogOut, ChevronDown } from "lucide-react";
+import { Search,Palette ,Music, Menu, User, Package, LogOut, ChevronDown } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { logout } from "../../services/AuthService";
@@ -57,8 +57,8 @@ const Header: FC<HeaderProps> = ({ onSidebarOpen }) => {
         >
           <input
             type='text'
-            placeholder='Search...'
-            className='w-full py-2 pl-10 pr-4 text-sm bg-[#282828] text-primaryText rounded-full focus:outline-none focus:ring-1 focus:ring-secondary'
+            placeholder='Search tracks...'
+            className='w-full py-2 pl-7 pr-4 text-sm bg-[#282828] text-primaryText rounded-full focus:outline-none focus:ring-1 focus:ring-secondary'
           />
           <button
             type='submit'
@@ -94,6 +94,13 @@ const Header: FC<HeaderProps> = ({ onSidebarOpen }) => {
             >
               <User size={16} className='mr-2' />
               Profile
+            </button>
+            <button
+              className='flex items-center w-full px-4 py-2 text-sm text-primaryText hover:bg-[#282828]'
+              onClick={() => window.location.href = "/artist/auth/register"}
+            >
+              <Music  size={16} className='mr-2' />
+              Register as artist
             </button>
             <button
               className='flex items-center w-full px-4 py-2 text-sm text-primaryText hover:bg-[#282828]'

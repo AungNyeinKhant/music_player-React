@@ -155,6 +155,17 @@ const Login: FC = () => {
                 <div className='text-red-500 text-sm text-center'>{error}</div>
               )}
             </form>
+            <div className='mt-4 text-center'>
+              <span className='text-primaryDarkText'>
+                Don't have an account?{" "}
+              </span>
+              <a
+                href='/register'
+                className='text-secondary hover:text-opacity-90'
+              >
+                Sign Up
+              </a>
+            </div>
           </div>
         </div>
       </div>

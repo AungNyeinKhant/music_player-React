@@ -23,8 +23,9 @@ const Artists: FC = () => {
     fetchArtists();
   }, []);
 
-  const handleSearchClick = () => {
-    console.log(searchQuery);
+  const handleSearchClick = async () => {
+    const response: any =  await userArtistList({ search: searchQuery });
+    setArtists(response.data.data);
   };
 
   return (

@@ -67,6 +67,7 @@ const MusicCard: FC<MusicCardProps> = ({
             {track.name}
           </h3>
           <p className='text-gray-400 text-sm truncate'>{track.artist.name}</p>
+          <p className='text-gray-400 text-sm truncate pb-2'>{track.listen_count} <span className="text-secondary text-xs">streams</span></p>
         </div>
       </div>
       <AddToPlaylist

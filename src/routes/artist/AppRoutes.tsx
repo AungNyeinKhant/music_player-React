@@ -8,6 +8,7 @@ import Home from "../../pages/artist/Home";
 import Tracks from "../../pages/artist/Tracks";
 import Albums from "../../pages/artist/Albums";
 import CreateAlbum from "../../pages/artist/form/CreateAlbum";
+import UpdateAlbum from "../../pages/artist/form/UpdateAlbum";
 
 const ArtistAppRoutes: FC = () => {
   return (
@@ -20,10 +21,11 @@ const ArtistAppRoutes: FC = () => {
             <PrivateRoutes role='artist'>
               <Routes>
                 <Route index path='/' element={<Home />} />
-                //Albums
+                
                 <Route path='/albums' element={<Albums />} />
                 <Route path='/albums/create' element={<CreateAlbum />} />
-                //Tracks
+                <Route path='/albums/update/:id' element={<UpdateAlbum />} />
+                
                 <Route path='/tracks' element={<Tracks />} />
               </Routes>
             </PrivateRoutes>

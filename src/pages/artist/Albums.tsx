@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { artistAlbumList } from "../../services/albumService";
 import Dashboard from "../../layouts/Dashboard";
-import { Plus, Trash2 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Plus, Trash2, Edit } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
 
 import DEFAULT_ALBUM_IMAGE from "../../assets/image/no-album-image.svg";
 
-type Album = {
+export type Album = {
   id: string;
   name: string;
   image: string | null;
@@ -18,6 +18,7 @@ type Album = {
 
 const Albums: React.FC = () => {
   const [albums, setAlbums] = useState<Album[]>([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchAlbums = async () => {
@@ -28,7 +29,7 @@ const Albums: React.FC = () => {
           setAlbums(response.data.data);
         }
       } catch (error) {
-        console.error("Error fetching albums:", error);
+        console.error("Failed to fetch albums:", error);
       }
     };
 
@@ -41,83 +42,71 @@ const Albums: React.FC = () => {
     alert(`Album ID: ${id}`);
   };
 
-  const handleDelete = async (e: React.MouseEvent, album: Album) => {
-    e.stopPropagation();
-    if (window.confirm(`Do you want to delete ${album.name} id ${album.id}?`)) {
-      try {
-        // await artistAPI.delete(`/albums/${album.id}`);
-        // setAlbums(albums.filter((a) => a.id !== album.id));
-      } catch (error) {
-        console.error("Error deleting album:", error);
-      }
-    }
+  const handleDelete = (e: React.MouseEvent, album: Album) => {
+    e.stopPropagation(); // Prevent event bubbling
+    // Delete functionality to be implemented
+    console.log("Delete album:", album.id);
   };
 
   return (
     <Dashboard>
-      <div className='bg-dashboard-primary rounded-lg shadow-lg p-6'>
-        {/* Header with title and create button */}
-        <div className='flex justify-between items-center mb-6'>
+      <div className='space-y-6'>
+        <div className='flex justify-between items-center'>
           <h1 className='text-2xl font-bold text-dashboard-primaryText'>
-            Album List
+            Your Albums
           </h1>
           <Link
             to='/artist/albums/create'
-            className='flex items-center gap-2 bg-dashboard-secondary hover:bg-opacity-80 text-white px-4 py-2 rounded-md transition-colors'
+            className='flex items-center gap-2 bg-dashboard-secondary text-dashboard-primaryText px-4 py-2 rounded-md hover:bg-opacity-90 transition-all'
           >
-            <Plus size={18} />
+            <Plus className='w-5 h-5' />
             Create Album
           </Link>
         </div>
 
-        {/* Albums table */}
-        <div className='overflow-x-auto'>
-          <table className='w-full border-collapse'>
-            <thead>
-              <tr className='bg-dashboard-primaryDark text-dashboard-primaryText border-b border-dashboard-accent border-opacity-20'>
-                <th className='text-left py-3 px-4'>Name</th>
-                <th className='text-left py-3 px-4'>Cover</th>
-                <th className='text-left py-3 px-4'>Genre</th>
-                <th className='text-left py-3 px-4'>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {albums.map((album) => (
-                <tr
-                  key={album.id}
-                  onClick={() => handleRowClick(album.id)}
-                  className='border-b border-dashboard-accent border-opacity-10 hover:bg-dashboard-primaryDark cursor-pointer transition-colors'
-                >
-                  <td className='py-3 px-4 text-dashboard-primaryText'>
-                    {album.name}
-                  </td>
-                  <td className='py-3 px-4 text-dashboard-primaryText'>
-                    <div className='w-12 h-12 rounded overflow-hidden'>
-                      <img
-                        src={
-                          album.image ? `${album.image}` : DEFAULT_ALBUM_IMAGE
-                        }
-                        alt={album.name}
-                        className='w-full h-full object-cover'
-                      />
-                    </div>
-                  </td>
-
-                  <td className='py-3 px-4 text-dashboard-primaryText'>
-                    {album.genre.name}
-                  </td>
-                  <td className='py-3 px-4 text-dashboard-primaryText'>
+        {/* Display Albums */}
+        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
+          {albums.map((album) => (
+            <div
+              key={album.id}
+              className='bg-dashboard-primary rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow'
+            >
+              <img
+                src={album.image || DEFAULT_ALBUM_IMAGE}
+                alt={album.name}
+                className='w-full h-48 object-cover'
+              />
+              <div className='p-4'>
+                <h3 className='text-lg font-semibold text-dashboard-primaryText mb-2'>
+                  {album.name}
+                </h3>
+                <p className='text-dashboard-primaryDarkText text-sm mb-3'>
+                  {album.description.length > 100
+                    ? album.description.slice(0, 100) + '...'
+                    : album.description}
+                </p>
+                <div className='flex justify-between items-center'>
+                  <span className='text-dashboard-primaryDarkText text-sm'>
+                    Genre: {album.genre.name}
+                  </span>
+                  <div className="flex space-x-2">
                     <button
-                      onClick={(e) => handleDelete(e, album)}
-                      className='text-red-500 hover:text-red-700 transition-colors'
+                      onClick={() => navigate(`/artist/albums/update/${album.id}`)}
+                      className='p-2 bg-dashboard-secondary text-dashboard-primaryText rounded-full hover:bg-opacity-90 transition-colors'
                     >
-                      <Trash2 size={18} />
+                      <Edit className='w-4 h-4' />
                     </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                    <button 
+                      onClick={(e) => handleDelete(e, album)}
+                      className='p-2 bg-red-500 text-dashboard-primaryText rounded-full hover:bg-opacity-90 transition-colors'
+                    >
+                      <Trash2 className='w-4 h-4' />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </Dashboard>

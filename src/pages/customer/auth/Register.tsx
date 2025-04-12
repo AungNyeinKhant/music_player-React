@@ -313,7 +313,7 @@ const Register: FC = () => {
                 Already have an account?{" "}
               </span>
               <a
-                href='/customer/auth/login'
+                href='/login'
                 className='text-secondary hover:text-opacity-90'
               >
                 Sign In

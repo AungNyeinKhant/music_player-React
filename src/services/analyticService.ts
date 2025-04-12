@@ -1,4 +1,4 @@
-import { adminAPI } from "./httpService";
+import { adminAPI, artistAPI } from "./httpService";
 
 // Play Analytics
 export const getPlayAnalytics = async (date: string, type?: string) => {
@@ -64,3 +64,18 @@ export const getArtistAnalytics = async (date: string) => {
     throw error;
   }
 };
+
+// Artist's analytics for their own dashboard
+export const getArtistPlayAnalytics = async (date: string, type: string = "monthly") => {
+  try {
+    const response = await artistAPI.get(
+      `/analytics/plays?date=${date}&type=${type}`
+    );
+    return response;
+  } catch (error) {
+    console.error("getArtistPlayAnalytics error:", error);
+    throw error;
+  }
+};
+
+

@@ -40,7 +40,7 @@ const SearchTracks: FC = () => {
 
   return (
     <Template>
-      <div className='flex-1 overflow-y-auto p-6'>
+      <div className='flex-1 overflow-y-auto p-6 '>
         <h2 className='text-2xl font-bold mb-6'>
           Search Results for "{searchQuery}"
         </h2>
@@ -49,7 +49,7 @@ const SearchTracks: FC = () => {
           <div className='text-center text-gray-400 mt-8'>Loading...</div>
         ) : (
           <>
-            <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6'>
+            <div className='grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 pb-20'>
               {searchResults.map((track) => (
                 <MusicCard
                   key={track.id}

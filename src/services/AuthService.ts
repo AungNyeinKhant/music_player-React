@@ -91,11 +91,15 @@ export const artistRegister = async (artistData: {
       }
     });
 
-    const response = await artistAPI.post("/auth/register", formData, {
+    const response:any = await artistAPI.post("/auth/register", formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
     });
+
+    artistAPI.defaults.headers.common[
+      "Authorization"
+    ] = `Bearer ${response?.data?.data?.accessToken}`;
 
     return response;
   } catch (error) {

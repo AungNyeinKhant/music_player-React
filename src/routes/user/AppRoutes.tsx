@@ -16,6 +16,7 @@ import AlbumDetail from "../../pages/customer/AlbumDetail";
 import PlaylistDetail from "../../pages/customer/PlaylistDetail";
 import GenreTrack from "../../pages/customer/GenreTrack";
 import SearchTracks from "../../pages/customer/SearchTracks";
+import UpdateProfile from "../../pages/customer/form/UpdateProfile";
 
 const AppRoutes: FC = () => {
   return (
@@ -47,6 +48,7 @@ const AppRoutes: FC = () => {
                       element={<Packages />}
                     />
                     <Route path='/search' element={<SearchTracks />} />
+                    <Route path='/profile' element={<UpdateProfile />} />
                   </Routes>
                 </PlaylistProvider>
               </TrackProvider>

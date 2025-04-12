@@ -55,8 +55,8 @@ const CreateTrack: React.FC<CreateTrackProps> = ({ selectedAlbum, albums }) => {
       setIsLoadingGenres(true);
       try {
         const response: any = await artistGenre();
-        if (response.success) {
-          setGenres(response.data);
+        if (response.data.success) {
+          setGenres(response.data.data);
         }
       } catch (error) {
         console.error("Error fetching genres:", error);

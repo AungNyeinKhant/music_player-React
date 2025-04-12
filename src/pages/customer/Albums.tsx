@@ -27,8 +27,10 @@ const Albums: FC = () => {
     fetchAlbums();
   }, []);
 
-  const handleSearchClick = () => {
+  const handleSearchClick = async () => {
     console.log(searchQuery);
+    const response: any = await userAlbumList({search:searchQuery})
+    setAlbums(response.data.data);
   };
 
   return (
