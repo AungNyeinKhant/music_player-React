@@ -15,7 +15,7 @@ const AddToPlaylist: React.FC<AddToPlaylistProps> = ({
   onClose,
   track,
 }) => {
-  const { playlists } = usePlaylist();
+  const { playlists, refreshPlaylists } = usePlaylist();
   const [selectedPlaylists, setSelectedPlaylists] = useState<string[]>(() => {
     return playlists
       .filter((playlist) =>
@@ -54,6 +54,7 @@ const AddToPlaylist: React.FC<AddToPlaylistProps> = ({
           await playlistHandleTrack(playlistId, track.id);
         })
       );
+      await refreshPlaylists();
       onClose();
     } catch (error) {
       console.error("Error updating playlists:", error);
@@ -105,10 +106,10 @@ const AddToPlaylist: React.FC<AddToPlaylistProps> = ({
           </button>
           <button
             onClick={handleSubmit}
-            disabled={selectedPlaylists.length === 0 || isLoading}
+            disabled={isLoading}
             className='px-4 py-2 bg-secondary text-primary rounded-lg hover:bg-opacity-80 disabled:opacity-50 disabled:cursor-not-allowed'
           >
-            {isLoading ? "Adding..." : "Add to Playlists"}
+            {isLoading ? "Saving..." : "Save Changes"}
           </button>
         </div>
       </div>

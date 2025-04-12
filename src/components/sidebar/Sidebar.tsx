@@ -8,11 +8,14 @@ import {
   Clock,
   X,
   Plus,
+  Pencil,
+  Trash2,
 } from "lucide-react";
 import { SidebarItem } from "../../types/index";
 import Logo from "../../assets/image/music-player-logo.svg";
 import { Link } from "react-router-dom";
 import { usePlaylist } from "../../context/PlaylistContext";
+import { editPlaylist, deletePlaylist } from "../../services/playlistService";
 
 interface SidebarProps {
   isOpen: boolean;
@@ -41,24 +44,40 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
       label: "Albums",
       path: "/app/albums",
     },
-    {
-      icon: <Heart className='w-6 h-6' />,
-      label: "Favorites",
-      path: "/app/favorites",
-    },
-    {
-      icon: <Clock className='w-6 h-6' />,
-      label: "Recently Plays",
-      path: "/app/recent",
-    },
+    
   ];
 
-  const { playlists, loading, createNewPlaylist } = usePlaylist();
+  const { playlists, loading, createNewPlaylist, refreshPlaylists } = usePlaylist();
 
   const handleCreatePlaylist = async () => {
     const name = prompt("Enter playlist name:");
     if (name) {
       await createNewPlaylist(name);
+    }
+  };
+
+  const handleEditPlaylist = async (id: string, currentName: string) => {
+    const newName = prompt("Edit playlist name:", currentName);
+    if (newName && newName !== currentName) {
+      try {
+        await editPlaylist(id, newName);
+        await refreshPlaylists();
+      } catch (error) {
+        console.error("Error editing playlist:", error);
+        alert("Failed to edit playlist");
+      }
+    }
+  };
+
+  const handleDeletePlaylist = async (id: string, name: string) => {
+    if (confirm(`Are you sure you want to delete "${name}"?`)) {
+      try {
+        await deletePlaylist(id);
+        await refreshPlaylists();
+      } catch (error) {
+        console.error("Error deleting playlist:", error);
+        alert("Failed to delete playlist");
+      }
     }
   };
 
@@ -136,13 +155,37 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
                   </div>
                 ) : (
                   playlists.map((playlist) => (
-                    <Link
+                    <div
                       key={playlist.id}
-                      to={`/playlist/${playlist.id}`}
-                      className='flex items-center text-gray-400 hover:text-primaryText py-2 text-sm'
+                      className='group flex items-center justify-between hover:bg-[#282828] rounded-lg px-2'
                     >
-                      {playlist.name}
-                    </Link>
+                      <Link
+                        to={`/app/playlist/${playlist.id}`}
+                        className='flex-1 text-gray-400 hover:text-primaryText py-2 text-sm'
+                      >
+                        {playlist.name}
+                      </Link>
+                      <div className='flex items-center opacity-0 group-hover:opacity-100 transition-opacity'>
+                        <button
+                          onClick={(e) => {
+                            e.preventDefault();
+                            handleEditPlaylist(playlist.id, playlist.name);
+                          }}
+                          className='p-1 hover:bg-[#282828] rounded-lg'
+                        >
+                          <Pencil className='w-4 h-4 text-gray-400 hover:text-primaryText' />
+                        </button>
+                        <button
+                          onClick={(e) => {
+                            e.preventDefault();
+                            handleDeletePlaylist(playlist.id, playlist.name);
+                          }}
+                          className='p-1 hover:bg-[#282828] rounded-lg'
+                        >
+                          <Trash2 className='w-4 h-4 text-gray-400 hover:text-red-500' />
+                        </button>
+                      </div>
+                    </div>
                   ))
                 )}
               </div>

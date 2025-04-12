@@ -92,7 +92,7 @@ const Register: FC = () => {
           return;
         }
 
-        storeRefreshToken(response?.data?.data?.refreshToken);
+        storeRefreshToken("user",response?.data?.data?.refreshToken);
 
         auth?.setUser({
           id: response?.data?.data?.user.id,

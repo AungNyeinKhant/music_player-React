@@ -51,7 +51,7 @@ const Login: FC = () => {
           return;
         }
 
-        storeRefreshToken(response?.data?.data?.refreshToken);
+        storeRefreshToken("admin",response?.data?.data?.refreshToken);
 
         auth?.setUser({
           id: response?.data?.data?.admin.id,

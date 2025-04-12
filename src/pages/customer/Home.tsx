@@ -13,12 +13,15 @@ import { MoreVertical } from "lucide-react";
 import Template from "../../layouts/Template";
 import {
   recentTracks,
-  playTrack,
   newTrendingTracksServ,
   mostPlayedTracksServ,
 } from "../../services/trackService";
+import { mostPlayAlbumsCurrent } from "../../services/albumService";
 import { useTrack } from "../../context/TrackContext";
+import { useNavigate } from "react-router-dom";
+
 const Home: FC = () => {
+  const navigate = useNavigate();
   const chosenTracks: TrackContextType | null = useTrack();
   const [recentPlayTracks, setRecentPlayTracks] = useState<Track[]>([]);
   const [newTrendingTracks, setNewTrendingTracks] = useState<Track[] | null>(
@@ -27,8 +30,11 @@ const Home: FC = () => {
   const [mostPlayedTracks, setMostPlayedTracks] = useState<Track[] | null>(
     null
   );
+  const [playlists, setPlaylists] = useState<PlaylistCardType[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
   const [isAddToPlaylistOpen, setIsAddToPlaylistOpen] = useState(false);
   const [selectedTrack, setSelectedTrack] = useState<Track | null>(null);
+
   const fetchRecentTracks = async () => {
     try {
       const response: any = await recentTracks(20);
@@ -51,10 +57,25 @@ const Home: FC = () => {
     }
   };
 
+  const fetchPopularAlbums = async () => {
+    setIsLoading(true);
+    try {
+      const response: any = await mostPlayAlbumsCurrent();
+      if (response.data.success) {
+        setPlaylists(response.data.data);
+      }
+    } catch (error) {
+      console.error("Error fetching popular albums:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   useEffect(() => {
     fetchRecentTracks();
     fetchTrendingTracks();
     fetchMostPlayedTracks();
+    fetchPopularAlbums();
   }, []);
 
   const fetchTrendingTracks = async () => {
@@ -68,35 +89,12 @@ const Home: FC = () => {
     }
   };
 
-  const playlists: PlaylistCardType[] = [
-    {
-      id: "1",
-      title: "Lo-Fi Beats",
-      description: "Chill beats to relax/study to",
-      coverImage:
-        "https://images.unsplash.com/photo-1516280440614-37939bbacd81?ixlib=rb-4.0.3",
-      songCount: 45,
-      duration: "2hr 55min",
-    },
-    {
-      id: "2",
-      title: "90s Rock",
-      description: "Best of 90s rock music",
-      coverImage:
-        "https://images.unsplash.com/photo-1498038432885-c6f3f1b912ee?ixlib=rb-4.0.3",
-      songCount: 45,
-      duration: "3hr 15min",
-    },
-    {
-      id: "3",
-      title: "Night Mode",
-      description: "Perfect for late night coding",
-      coverImage:
-        "https://images.unsplash.com/photo-1513829596324-4bb2800c5efb?ixlib=rb-4.0.3",
-      songCount: 40,
-      duration: "2hr 45min",
-    },
-  ];
+  const handleTrackClick = (track: Track, trackList: Track[]) => {
+    chosenTracks?.setChosenTrack({
+      playTrack: track,
+      queTracks: trackList,
+    });
+  };
 
   return (
     <Template>
@@ -118,24 +116,10 @@ const Home: FC = () => {
               {recentPlayTracks
                 ? recentPlayTracks.map((track) => (
                     <div key={track.id} className='flex-none snap-start'>
-                      <button
-                        onClick={async () => {
-                          try {
-                            const response: any = await playTrack(track.id);
-                            if (response.data.success) {
-                              chosenTracks?.setChosenTrack({
-                                playTrack: track,
-                                queTracks: recentPlayTracks,
-                              });
-                            }
-                          } catch (error) {
-                            console.error("Error playing track:", error);
-                          }
-                        }}
-                        className='focus:outline-none'
-                      >
-                        <MusicCard track={track} />
-                      </button>
+                      <MusicCard 
+                        track={track} 
+                        onClick={(track) => handleTrackClick(track, recentPlayTracks)}
+                      />
                     </div>
                   ))
                 : "No recent tracks"}
@@ -154,22 +138,9 @@ const Home: FC = () => {
                     key={index}
                     className='flex items-center justify-between p-2 hover:bg-[#282828] rounded-lg group'
                   >
-                    {/* <div className='flex items-center flex-1'> */}
                     <button
                       className='flex items-center flex-1'
-                      onClick={async () => {
-                        try {
-                          const response: any = await playTrack(track.id);
-                          if (response.data.success) {
-                            chosenTracks?.setChosenTrack({
-                              playTrack: track,
-                              queTracks: newTrendingTracks,
-                            });
-                          }
-                        } catch (error) {
-                          console.error("Error playing track:", error);
-                        }
-                      }}
+                      onClick={() => handleTrackClick(track, newTrendingTracks)}
                     >
                       <span className='text-gray-400 w-8'>{index + 1}</span>
                       <img
@@ -188,7 +159,6 @@ const Home: FC = () => {
                         </p>
                       </div>
                     </button>
-                    {/* </div> */}
                     <div className='flex items-center gap-3'>
                       <span className='text-gray-400 text-sm'>
                         {track.listen_count.toLocaleString()} streams
@@ -215,36 +185,16 @@ const Home: FC = () => {
             <h2 className='text-primaryText text-2xl font-bold'>
               Most played tracks of the month
             </h2>
-            {/* <a
-              href='#'
-              className='text-gray-400 text-sm hover:text-primaryText'
-            >
-              See all
-            </a> */}
           </div>
           <div className='relative w-full'>
             <div className='flex gap-4 overflow-x-auto snap-x snap-mandatory scrollbar-hide'>
               {mostPlayedTracks
                 ? mostPlayedTracks.map((track) => (
                     <div key={track.id} className='flex-none snap-start'>
-                      <button
-                        onClick={async () => {
-                          try {
-                            const response: any = await playTrack(track.id);
-                            if (response.data.success) {
-                              chosenTracks?.setChosenTrack({
-                                playTrack: track,
-                                queTracks: mostPlayedTracks,
-                              });
-                            }
-                          } catch (error) {
-                            console.error("Error playing track:", error);
-                          }
-                        }}
-                        className='focus:outline-none'
-                      >
-                        <MusicCard track={track} />
-                      </button>
+                      <MusicCard 
+                        track={track} 
+                        onClick={(track) => handleTrackClick(track, mostPlayedTracks)}
+                      />
                     </div>
                   ))
                 : "No recent tracks"}
@@ -255,7 +205,7 @@ const Home: FC = () => {
         <div className='mb-8'>
           <div className='flex items-center justify-between mb-4'>
             <h2 className='text-2xl font-bold text-primaryText'>
-              Top playlists for you
+              Top albums for you
             </h2>
             <a
               href='#'
@@ -265,9 +215,21 @@ const Home: FC = () => {
             </a>
           </div>
           <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6'>
-            {playlists.map((playlist) => (
-              <PlaylistCard key={playlist.id} playlist={playlist} />
-            ))}
+            {isLoading ? (
+              <div className="col-span-3 text-center text-gray-400 py-8">Loading popular albums...</div>
+            ) : playlists.length > 0 ? (
+              playlists.map((playlist) => (
+                <PlaylistCard 
+                  onClick={() => {
+                    navigate(`/app/album-detail/${playlist.id}`);
+                  }} 
+                  key={playlist.id} 
+                  playlist={playlist} 
+                />
+              ))
+            ) : (
+              <div className="col-span-3 text-center text-gray-400 py-8">No albums found</div>
+            )}
           </div>
         </div>
       </div>

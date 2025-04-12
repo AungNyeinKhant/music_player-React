@@ -1,4 +1,4 @@
-import { artistAPI } from "./httpService";
+import { artistAPI, userAPI } from "./httpService";
 
 export const createAlbum = async (albumData: {
   name: string;
@@ -44,6 +44,63 @@ export const artistGenre = async () => {
     return response.data;
   } catch (error) {
     console.error("artistGenre error:", error);
+    throw error;
+  }
+};
+
+export const mostPlayAlbumsCurrent = async () => {
+  try {
+    const response = await userAPI.get(`/albums/most-played`);
+    console.log(response);
+    return response;
+  } catch (error) {
+    console.error("mostPlayAlbumsCurrent error:", error);
+    throw error;
+  }
+};
+
+export const getTracksByAlbumId = async (id: string) => {
+  try {
+    const response = await userAPI.get(`/albums/${id}/tracks`);
+    console.log(response);
+    return response;
+  } catch (error) {
+    console.error("getTracksByAlbumId error:", error);
+    throw error;
+  }
+};
+
+export const userGetTrackByArtist = async (artist_id: string) => {
+  try {
+    const response = await userAPI.get(`/tracks/artist/${artist_id}`);
+    return response;
+  } catch (error) {
+    console.error("userGetTrackByArtist error:", error);
+    throw error;
+  }
+};
+export const userAlbumList = async ({
+  artist_id,
+  genre_id,
+  search,
+}: {
+  artist_id?: string;
+  genre_id?: string;
+  search?: string;
+} = {}) => {
+  try {
+    const params = new URLSearchParams();
+    if (artist_id) params.append("artist_id", artist_id);
+    if (genre_id) params.append("genre_id", genre_id);
+    if (search) params.append("search", search);
+
+    const queryString = params.toString();
+    const url = `/albums${queryString ? `?${queryString}` : ""}`;
+
+    const response = await userAPI.get(url);
+    return response.data;
+  } catch (error) {
+    console.error("userAlbumList error:", error);
     throw error;
   }
 };
