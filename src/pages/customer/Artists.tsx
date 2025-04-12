@@ -2,6 +2,8 @@ import { FC } from "react";
 import Template from "../../layouts/Template";
 import MusicCard from "../../components/cards/MusicCard";
 import ArtistCard from "../../components/cards/ArtistCard";
+import { useNavigate } from "react-router-dom";
+
 
 interface Artist {
   id: string;
@@ -11,6 +13,7 @@ interface Artist {
 }
 
 const Artists: FC = () => {
+  const navigate = useNavigate();
   const artists: Artist[] = [
     {
       id: "1",
@@ -52,6 +55,7 @@ const Artists: FC = () => {
           {artists.map((artist) => (
             <div key={artist.id} className='flex flex-col items-center'>
               <ArtistCard
+              onClick={() =>{ navigate(`/app/artist-detail/${artist.id}`) }}
                 artist={{
                   id: artist.id,
                   name: artist.name,

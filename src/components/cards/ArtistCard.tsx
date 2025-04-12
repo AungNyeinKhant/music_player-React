@@ -1,4 +1,5 @@
 import { FC } from "react";
+import { useNavigate } from "react-router-dom";
 
 type Artist = {
   id: string;
@@ -10,14 +11,17 @@ type Artist = {
 type ArtistCardProps = {
   artist: Artist;
   size?: "small" | "medium" | "large";
+  onClick: () => void;
 };
 
-const ArtistCard: FC<ArtistCardProps> = ({ artist, size = "medium" }) => {
+const ArtistCard: FC<ArtistCardProps> = ({ artist,onClick, size = "medium" }) => {
   const sizeClasses = {
     small: "w-32 h-32",
     medium: "w-48 h-48",
     large: "w-64 h-64",
   };
+
+  const navigate = useNavigate();
 
   const formatListenCount = (count: number): string => {
     if (count >= 1000000) {
@@ -29,7 +33,10 @@ const ArtistCard: FC<ArtistCardProps> = ({ artist, size = "medium" }) => {
   };
 
   return (
-    <div className='group relative cursor-pointer w-[180px] sm:w-[220px] md:w-[240px] lg:w-[240px] mx-2'>
+    <div
+      onClick={onClick}
+      className='group relative cursor-pointer w-[180px] sm:w-[220px] md:w-[240px] lg:w-[240px] mx-2'
+    >
       <div
         className={`${sizeClasses[size]} rounded-lg overflow-hidden mx-auto relative`}
       >

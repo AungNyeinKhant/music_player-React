@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { getRefreshToken } from '../utils/crypto';
+import { getRefreshToken, clearRefreshToken } from '../utils/crypto';
 import { userAPI, artistAPI, adminAPI } from '../services/httpService';
 
 type Role = 'user' | 'artist' | 'admin';
@@ -12,13 +12,12 @@ export const useTokenRefresh = (role: Role) => {
 
   useEffect(() => {
     const checkAndRefreshToken = async () => {
-      const refreshToken = getRefreshToken();
+      const refreshToken = getRefreshToken(role);
       if (!refreshToken) return;
 
       try {
         const api = role === 'user' ? userAPI : role === 'artist' ? artistAPI : adminAPI;
         const response:any = await userAPI.post('/auth/refresh-token', { refreshToken });
-        
         
         if (response?.data?.data?.accessToken) {
           api.defaults.headers.common['Authorization'] = `Bearer ${response.data.data.accessToken}`;
@@ -36,15 +35,13 @@ export const useTokenRefresh = (role: Role) => {
       } catch (error) {
         console.error('Token refresh failed:', error);
         // Clear invalid tokens
-        
-        localStorage.removeItem('refreshToken');
+        clearRefreshToken(role);
         
         const api = role === 'user' ? userAPI : role === 'artist' ? artistAPI : adminAPI;
         api.defaults.headers.common['Authorization'] = '';
-        
       }
     };
 
     checkAndRefreshToken();
-  }, [role,  auth]);//[role, navigate, auth]
+  }, [role, auth]);
 }; 

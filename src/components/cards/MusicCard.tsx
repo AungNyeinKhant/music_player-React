@@ -9,6 +9,7 @@ type MusicCardProps = {
   size?: "small" | "medium" | "large";
   onFavoriteClick?: (id: string) => void;
   onMenuClick?: (id: string) => void;
+  onClick?: (track: Track) => void;
 };
 
 const MusicCard: FC<MusicCardProps> = ({
@@ -16,6 +17,7 @@ const MusicCard: FC<MusicCardProps> = ({
   size = "medium",
   onFavoriteClick,
   onMenuClick,
+  onClick,
 }) => {
   const [isAddToPlaylistOpen, setIsAddToPlaylistOpen] = useState(false);
 
@@ -30,13 +32,23 @@ const MusicCard: FC<MusicCardProps> = ({
     setIsAddToPlaylistOpen(true);
   };
 
+  const handleClick = () => {
+    if (onClick) {
+      onClick(track);
+    }
+  };
+
   return (
     <>
-      <div className='group relative cursor-pointer w-[180px] sm:w-[220px] md:w-[240px] lg:w-[240px] mx-2'>
+      <div 
+        className='group relative cursor-pointer w-[180px] sm:w-[220px] md:w-[240px] lg:w-[240px] mx-2'
+        
+      >
         <div
           className={`${sizeClasses[size]} rounded-lg overflow-hidden mx-auto relative`}
         >
           <img
+          onClick={handleClick}
             src={track.album.image ? track.album.image : NoImage}
             alt={track.name}
             className='w-full h-full object-cover transform transition-transform group-hover:scale-105'

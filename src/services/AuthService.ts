@@ -150,7 +150,10 @@ export const adminRegister = async (adminData: {
 };
 
 export const logout = (auth:AuthContextType | null) =>{
-  localStorage.removeItem("refreshToken");
+
+    localStorage.removeItem(`${auth?.user?.role}RefreshToken`);
+  
+  
   auth?.setUser(null);
   userAPI.defaults.headers.common["Authorization"] = "";
   artistAPI.defaults.headers.common["Authorization"] = ""

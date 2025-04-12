@@ -9,11 +9,20 @@ export type TrendingTrack = {
 
 export type PlaylistCard = {
   id: string;
-  title: string;
+  name: string;
   description: string;
-  coverImage: string;
-  songCount?: number;
-  duration?: string;
+  image: string;
+  bg_image: string | null;
+  artist_id: string;
+  genre_id: string;
+  created_at: string;
+  artist: {
+    name: string;
+    image: string;
+  };
+  genre: {
+    name: string;
+  };
 };
 
 export type Playlist = {

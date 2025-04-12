@@ -12,6 +12,8 @@ import ArtistDetail from "../../pages/customer/ArtistDetail";
 import TrackProvider from "../../context/TrackContext";
 import Packages from "../../pages/customer/Packages";
 import { PlaylistProvider } from "../../context/PlaylistContext";
+import AlbumDetail from "../../pages/customer/AlbumDetail";
+import PlaylistDetail from "../../pages/customer/PlaylistDetail";
 
 const AppRoutes: FC = () => {
   return (
@@ -28,10 +30,12 @@ const AppRoutes: FC = () => {
                     <Route index path='/' element={<Home />} />
                     <Route path='/genres' element={<Genres />} />
                     <Route path='/artists' element={<Artists />} />
-                    <Route path='/artist-detail' element={<ArtistDetail />} />
+                    <Route path='/artist-detail/:id' element={<ArtistDetail />} />
                     <Route path='/albums' element={<Albums />} />
+                    <Route path='/album-detail/:id' element={<AlbumDetail />} />
                     <Route path='/favorites' element={<Favourates />} />
                     <Route path='/recent' element={<RecentlyPlays />} />
+                    <Route path='/playlist/:id' element={<PlaylistDetail />} />
                     <Route
                       path='/subscription-packages'
                       element={<Packages />}
