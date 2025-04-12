@@ -15,7 +15,7 @@ const Albums: FC = () => {
     const fetchAlbums = async () => {
       try {
         const response: any = await userAlbumList();
-        setAlbums(response.data);
+        setAlbums(response.data.data);
       } catch (err) {
         setError("Failed to load albums");
       } finally {

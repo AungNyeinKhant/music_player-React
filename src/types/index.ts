@@ -89,3 +89,15 @@ export type TrackContextType = {
   handleNextTrack: () => void;
   handlePreviousTrack: () => void;
 };
+
+export type Artist4User = {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  dob: string;
+  image?: string | null;
+  bg_image?: string | null;
+  created_at: string;
+  updated_at: string;
+};

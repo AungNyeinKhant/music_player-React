@@ -1,49 +1,26 @@
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
 import Template from "../../layouts/Template";
-import MusicCard from "../../components/cards/MusicCard";
 import ArtistCard from "../../components/cards/ArtistCard";
 import { useNavigate } from "react-router-dom";
-
-
-interface Artist {
-  id: string;
-  name: string;
-  cover: string;
-  listenCount: number;
-}
+import { userArtistList } from "../../services/artistService";
+import { Artist4User } from "../../types";
 
 const Artists: FC = () => {
   const navigate = useNavigate();
-  const artists: Artist[] = [
-    {
-      id: "1",
-      name: "The Weeknd",
-      cover:
-        "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?ixlib=rb-4.0.3",
-      listenCount: 1234567,
-    },
-    {
-      id: "2",
-      name: "Imagine Dragons",
-      cover:
-        "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?ixlib=rb-4.0.3",
-      listenCount: 987654,
-    },
-    {
-      id: "3",
-      name: "Coldplay",
-      cover:
-        "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?ixlib=rb-4.0.3",
-      listenCount: 876543,
-    },
-    {
-      id: "4",
-      name: "OneRepublic",
-      cover:
-        "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3",
-      listenCount: 765432,
-    },
-  ];
+  const [artists, setArtists] = useState<Artist4User[]>([]);
+
+  useEffect(() => {
+    const fetchArtists = async () => {
+      try {
+        const response: any = await userArtistList();
+        setArtists(response.data.data);
+      } catch (error) {
+        console.error("Error fetching artists:", error);
+      }
+    };
+
+    fetchArtists();
+  }, []);
 
   return (
     <Template>
@@ -55,13 +32,10 @@ const Artists: FC = () => {
           {artists.map((artist) => (
             <div key={artist.id} className='flex flex-col items-center'>
               <ArtistCard
-              onClick={() =>{ navigate(`/app/artist-detail/${artist.id}`) }}
-                artist={{
-                  id: artist.id,
-                  name: artist.name,
-                  listen_count: 300,
-                  image: artist.cover,
+                onClick={() => {
+                  navigate(`/app/artist-detail/${artist.id}`);
                 }}
+                artist={artist}
               />
             </div>
           ))}

@@ -31,7 +31,7 @@ export const createAlbum = async (albumData: {
 export const artistAlbumList = async () => {
   try {
     const response = await artistAPI.get("/albums");
-    return response.data;
+    return response;
   } catch (error) {
     console.error("artistAlbumList error:", error);
     throw error;
@@ -41,7 +41,7 @@ export const artistAlbumList = async () => {
 export const artistGenre = async () => {
   try {
     const response = await artistAPI.get("/genres");
-    return response.data;
+    return response;
   } catch (error) {
     console.error("artistGenre error:", error);
     throw error;
@@ -98,9 +98,18 @@ export const userAlbumList = async ({
     const url = `/albums${queryString ? `?${queryString}` : ""}`;
 
     const response = await userAPI.get(url);
-    return response.data;
+    return response;
   } catch (error) {
     console.error("userAlbumList error:", error);
+    throw error;
+  }
+};
+export const getAlbumByArtistId = async (id: string) => {
+  try {
+    const response = await artistAPI.get(`/albums?artist_id=${id}`);
+    return response;
+  } catch (error) {
+    console.error("artistAlbumList error:", error);
     throw error;
   }
 };

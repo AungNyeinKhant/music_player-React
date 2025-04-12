@@ -43,13 +43,22 @@ export const mostPlayedTracksServ = async (limit: number) => {
   }
 };
 
+export const getTrackByArtistById = async (artistId: string) => {
+  try {
+    const response = await userAPI.get(`/tracks/artist/${artistId}`);
+    return response;
+  } catch (error) {
+    console.error("getTrackByArtistById error:", error);
+    throw error;
+  }
+};
+
 // ==================== user end =============================
 // ==================== artist =============================
 export const findTracksByAlbumId = async (albumId: string) => {
   try {
-    
     const response = await artistAPI.get(`/tracks?album_id=${albumId}`);
-    
+
     return response;
   } catch (error) {
     console.error("findTracksByAlbumId error:", error);

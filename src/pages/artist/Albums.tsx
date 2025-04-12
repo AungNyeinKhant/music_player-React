@@ -3,7 +3,7 @@ import { artistAlbumList } from "../../services/albumService";
 import Dashboard from "../../layouts/Dashboard";
 import { Plus, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
-import { artistAPI } from "../../services/httpService";
+
 import DEFAULT_ALBUM_IMAGE from "../../assets/image/no-album-image.svg";
 
 type Album = {
@@ -23,8 +23,9 @@ const Albums: React.FC = () => {
     const fetchAlbums = async () => {
       try {
         const response: any = await artistAlbumList();
-        if (response.success) {
-          setAlbums(response.data);
+        console.log("fetchAlbums", response);
+        if (response.data.success) {
+          setAlbums(response.data.data);
         }
       } catch (error) {
         console.error("Error fetching albums:", error);

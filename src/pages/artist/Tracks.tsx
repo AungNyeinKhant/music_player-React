@@ -47,8 +47,8 @@ const Tracks: FC = () => {
     const fetchAlbums = async () => {
       try {
         const response: any = await artistAlbumList();
-        if (response.success) {
-          setAlbums(response.data);
+        if (response.data.success) {
+          setAlbums(response.data.data);
         }
       } catch (error) {
         console.error("Error fetching albums:", error);
