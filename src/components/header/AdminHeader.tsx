@@ -3,6 +3,7 @@ import { ChevronDown, LogOut, Menu, X, User } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { logout } from "../../services/AuthService";
+import defaultProfileImage from "../../assets/image/no-profile.webp";
 
 const AdminHeader: FC<{
   isSidebarOpen: boolean;
@@ -42,24 +43,24 @@ const AdminHeader: FC<{
           className='flex items-center space-x-2 p-2 rounded-md hover:bg-dashboard-primary transition-colors'
         >
           <img
-            src='https://github.com/shadcn.png'
-            alt='Profile'
-            className='w-8 h-8 rounded-full'
+            src={auth?.user?.image || defaultProfileImage}
+            alt={auth?.user?.name || "Admin"}
+            className='w-8 h-8 rounded-full object-cover'
           />
-          <span>Admin Name</span>
+          <span>{auth?.user?.name || "Admin"}</span>
           <ChevronDown size={16} />
         </button>
 
         {isProfileOpen && (
           <div className='absolute right-0 mt-2 w-48 bg-dashboard-primaryDark rounded-md shadow-lg py-1 z-10'>
-            <button 
+            <button
               className='flex items-center w-full px-4 py-2 text-sm text-dashboard-primaryText hover:bg-dashboard-primary'
               onClick={() => navigate("/admin/profile")}
             >
               <User size={16} className='mr-2' />
               Profile
             </button>
-            <button 
+            <button
               className='flex items-center w-full px-4 py-2 text-sm text-dashboard-primaryText hover:bg-dashboard-primary'
               onClick={handleLogout}
             >

@@ -46,7 +46,7 @@ const Player: FC = () => {
 
         <div className='flex flex-col items-center w-[40%]'>
           <div className='flex items-center gap-4'>
-            <Shuffle className='w-5 h-5 text-gray-400 hover:text-primaryText cursor-pointer' />
+            {/* <Shuffle className='w-5 h-5 text-gray-400 hover:text-primaryText cursor-pointer' /> */}
             <SkipBack
               className='w-5 h-5 text-gray-400 hover:text-primaryText cursor-pointer'
               onClick={handlePreviousTrack}
@@ -65,7 +65,7 @@ const Player: FC = () => {
               className='w-5 h-5 text-gray-400 hover:text-primaryText cursor-pointer'
               onClick={handleNextTrack}
             />
-            <Repeat className='w-5 h-5 text-gray-400 hover:text-primaryText cursor-pointer' />
+            {/* <Repeat className='w-5 h-5 text-gray-400 hover:text-primaryText cursor-pointer' /> */}
           </div>
           <div className='flex items-center gap-2 w-full mt-2'>
             <span className='text-xs text-gray-400'>

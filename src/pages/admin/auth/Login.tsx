@@ -16,7 +16,7 @@ const Login: FC = () => {
   const auth = useAuth();
 
   // Check for existing refresh token and attempt to refresh
-  useTokenRefresh('admin');
+  useTokenRefresh("admin");
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -51,11 +51,13 @@ const Login: FC = () => {
           return;
         }
 
-        storeRefreshToken("admin",response?.data?.data?.refreshToken);
+        storeRefreshToken("admin", response?.data?.data?.refreshToken);
 
         auth?.setUser({
           id: response?.data?.data?.admin.id,
+          image: response.data.data.admin.image,
           role: "admin",
+          name: response.data.data.admin.name,
         });
 
         navigate("/admin");

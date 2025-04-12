@@ -17,7 +17,7 @@ const Login: FC = () => {
   const auth = useAuth();
 
   // Check for existing refresh token and attempt to refresh
-  useTokenRefresh('user');
+  useTokenRefresh("user");
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -44,7 +44,7 @@ const Login: FC = () => {
 
       try {
         const response: any = await userLogin(values.email, values.password);
-        
+
         if (response.status === 400) {
           const errorMessage =
             response?.data?.data?.error ?? "Something went wrong";
@@ -52,13 +52,14 @@ const Login: FC = () => {
           return;
         }
 
-        storeRefreshToken("user",response?.data?.data?.refreshToken);
+        storeRefreshToken("user", response?.data?.data?.refreshToken);
 
         auth?.setUser({
           id: response?.data?.data?.user.id,
+          image: response.data.data.image,
           role: "user",
+          name: response.data.data.user.name,
         });
-        
 
         navigate("/app");
       } catch (err) {

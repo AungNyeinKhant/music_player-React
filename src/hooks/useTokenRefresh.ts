@@ -1,10 +1,10 @@
-import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import { getRefreshToken, clearRefreshToken } from '../utils/crypto';
-import { userAPI, artistAPI, adminAPI } from '../services/httpService';
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import { getRefreshToken, clearRefreshToken } from "../utils/crypto";
+import { userAPI, artistAPI, adminAPI } from "../services/httpService";
 
-type Role = 'user' | 'artist' | 'admin';
+type Role = "user" | "artist" | "admin";
 
 export const useTokenRefresh = (role: Role) => {
   const navigate = useNavigate();
@@ -16,32 +16,41 @@ export const useTokenRefresh = (role: Role) => {
       if (!refreshToken) return;
 
       try {
-        const api = role === 'user' ? userAPI : role === 'artist' ? artistAPI : adminAPI;
-        const response:any = await userAPI.post('/auth/refresh-token', { refreshToken });
-        
+        const api =
+          role === "user" ? userAPI : role === "artist" ? artistAPI : adminAPI;
+        const response: any = await userAPI.post("/auth/refresh-token", {
+          refreshToken,
+        });
+
         if (response?.data?.data?.accessToken) {
-          api.defaults.headers.common['Authorization'] = `Bearer ${response.data.data.accessToken}`;
-          
+          api.defaults.headers.common[
+            "Authorization"
+          ] = `Bearer ${response.data.data.accessToken}`;
+
           // Set user in auth context
+
           auth?.setUser({
             id: response.data.data.userId,
-            role: role
+            image: response.data.data.image,
+            role: response.data.data.role,
+            name: response.data.data.name,
           });
 
           // Navigate to appropriate dashboard
-          const dashboardPath = role === 'user' ? '/app' : `/${role}`;
+          const dashboardPath = role === "user" ? "/app" : `/${role}`;
           navigate(dashboardPath);
         }
       } catch (error) {
-        console.error('Token refresh failed:', error);
+        console.error("Token refresh failed:", error);
         // Clear invalid tokens
         clearRefreshToken(role);
-        
-        const api = role === 'user' ? userAPI : role === 'artist' ? artistAPI : adminAPI;
-        api.defaults.headers.common['Authorization'] = '';
+
+        const api =
+          role === "user" ? userAPI : role === "artist" ? artistAPI : adminAPI;
+        api.defaults.headers.common["Authorization"] = "";
       }
     };
 
     checkAndRefreshToken();
   }, [role, auth]);
-}; 
+};

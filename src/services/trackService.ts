@@ -53,6 +53,28 @@ export const getTrackByArtistById = async (artistId: string) => {
   }
 };
 
+export const getTrackByGenre = async (genreId: string) => {
+  try {
+    const response = await userAPI.get(`/tracks/genre/${genreId}`);
+    console.log("getTrackByGenre: ", response); // Add this line to log the response from the AP
+    return response;
+  } catch (error) {
+    console.error("getTrackByGenre error:", error);
+    throw error;
+  }
+};
+
+export const getTrackBySearch = async (search: string) => {
+  try {
+    const response = await userAPI.get(`/tracks?search=${search}`);
+    console.log("getTrackBySearch: ", response); // Add this line to log the response from the AP
+    return response;
+  } catch (error) {
+    console.error("getTrackBySearch error:", error);
+    throw error;
+  }
+};
+
 // ==================== user end =============================
 // ==================== artist =============================
 export const findTracksByAlbumId = async (albumId: string) => {
