@@ -1,7 +1,5 @@
 import { adminAPI, userAPI } from "./httpService";
 
-
-
 export const getPurchases = async (): Promise<any> => {
   try {
     const response = await adminAPI.get("/purchase");
@@ -12,20 +10,34 @@ export const getPurchases = async (): Promise<any> => {
   }
 };
 
-export const handleStatus = async (purchaseId: string, reject?: boolean): Promise<any> => {
+export const handleStatus = async (
+  purchaseId: string,
+  reject?: boolean
+): Promise<any> => {
   try {
     const response = await adminAPI.post(`/purchase/handle`, {
-      purchase_id:purchaseId,
+      purchase_id: purchaseId,
       reject,
     });
     return response;
   } catch (error) {
     console.error("Error handling status:", error);
-}
-}
+  }
+};
+
 export const getPackages = async (): Promise<any> => {
   try {
     const response = await userAPI.get("/packages");
+    return response;
+  } catch (error) {
+    console.error("Error fetching packages:", error);
+    throw error;
+  }
+};
+
+export const getPackages4Admin = async (): Promise<any> => {
+  try {
+    const response = await adminAPI.get("/packages");
     return response;
   } catch (error) {
     console.error("Error fetching packages:", error);
@@ -50,6 +62,39 @@ export const purchasePackage = async (
     return response;
   } catch (error) {
     console.error("Error purchasing package:", error);
+    throw error;
+  }
+};
+
+export const createPackage = async (packageData: {
+  name: string;
+  price: number;
+  num_of_days: number;
+  description: string;
+}): Promise<any> => {
+  try {
+    const response = await adminAPI.post("/packages", packageData);
+    return response;
+  } catch (error) {
+    console.error("Error creating package:", error);
+    throw error;
+  }
+};
+
+export const updatePackage = async (
+  packageId: string,
+  packageData: {
+    name?: string;
+    price?: number;
+    num_of_days?: number;
+    description?: string;
+  }
+): Promise<any> => {
+  try {
+    const response = await adminAPI.put(`/packages/${packageId}`, packageData);
+    return response;
+  } catch (error) {
+    console.error("Error updating package:", error);
     throw error;
   }
 };

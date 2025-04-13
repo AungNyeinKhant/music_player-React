@@ -1,17 +1,33 @@
 import { FC, useState, useEffect } from "react";
 import AdminDashboard from "../../layouts/AdminDashboard";
 import LineChart from "./analytic/LineChart";
-import { getPlayAnalytics, getPurchaseAnalytics } from "../../services/analyticService";
+import {
+  getPlayAnalytics,
+  getPurchaseAnalytics,
+  getMonthlyTotalAnalytics,
+} from "../../services/analyticService";
 
 const Home: FC = () => {
-  const [activeTab, setActiveTab] = useState<"streams" | "purchases">("streams");
+  const [activeTab, setActiveTab] = useState<"streams" | "purchases">(
+    "streams"
+  );
   const [selectedPeriod, setSelectedPeriod] = useState<string>("monthly");
   const [startDate, setStartDate] = useState<Date | null>(new Date());
-  const [streamsData, setStreamsData] = useState<{ labels: string[]; data: number[] }>({
+  const [monthlyTotals, setMonthlyTotals] = useState<{
+    totalPlayCount: number;
+    totalPurchaseAmount: number;
+  }>({ totalPlayCount: 0, totalPurchaseAmount: 0 });
+  const [streamsData, setStreamsData] = useState<{
+    labels: string[];
+    data: number[];
+  }>({
     labels: [],
     data: [],
   });
-  const [purchasesData, setPurchasesData] = useState<{ labels: string[]; data: number[] }>({
+  const [purchasesData, setPurchasesData] = useState<{
+    labels: string[];
+    data: number[];
+  }>({
     labels: [],
     data: [],
   });
@@ -21,21 +37,31 @@ const Home: FC = () => {
   useEffect(() => {
     const fetchAnalytics = async () => {
       if (!startDate) return;
-      
+
       setLoading(true);
       setError(null);
-      
+
       try {
-        const dateString = startDate.toISOString().split('T')[0];
-        
+        // Fetch monthly totals
+        const totalsResponse: any = await getMonthlyTotalAnalytics();
+        setMonthlyTotals(totalsResponse.data.data);
+
+        const dateString = startDate.toISOString().split("T")[0];
+
         if (activeTab === "streams") {
-          const response:any = await getPlayAnalytics(dateString, selectedPeriod);
+          const response: any = await getPlayAnalytics(
+            dateString,
+            selectedPeriod
+          );
           setStreamsData({
             labels: response.data.labels || [],
             data: response.data.data || [],
           });
         } else {
-          const response:any = await getPurchaseAnalytics(dateString, selectedPeriod);
+          const response: any = await getPurchaseAnalytics(
+            dateString,
+            selectedPeriod
+          );
           setPurchasesData({
             labels: response.data.labels || [],
             data: response.data.data || [],
@@ -60,13 +86,17 @@ const Home: FC = () => {
           <div className='bg-dashboard-secondary p-6 rounded-lg shadow-md text-dashboard-secondaryText hover:bg-dashboard-secondaryDark transition-colors'>
             <h3 className='text-lg font-semibold mb-2'>This Month's Streams</h3>
             <p className='text-3xl font-bold'>
-              {loading ? "Loading..." : streamsData.data[streamsData.data.length - 1] || 0}
+              {loading ? "Loading..." : monthlyTotals.totalPlayCount}
             </p>
           </div>
           <div className='bg-dashboard-secondary p-6 rounded-lg shadow-md text-dashboard-secondaryText hover:bg-dashboard-secondaryDark transition-colors'>
-            <h3 className='text-lg font-semibold mb-2'>Revenue</h3>
+            <h3 className='text-lg font-semibold mb-2'>
+              Revenue of this month
+            </h3>
             <p className='text-3xl font-bold'>
-              {loading ? "Loading..." : `$${purchasesData.data[purchasesData.data.length - 1] || 0}`}
+              {loading
+                ? "Loading..."
+                : `${monthlyTotals.totalPurchaseAmount} MMK`}
             </p>
           </div>
         </div>

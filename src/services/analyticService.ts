@@ -66,7 +66,10 @@ export const getArtistAnalytics = async (date: string) => {
 };
 
 // Artist's analytics for their own dashboard
-export const getArtistPlayAnalytics = async (date: string, type: string = "monthly") => {
+export const getArtistPlayAnalytics = async (
+  date: string,
+  type: string = "monthly"
+) => {
   try {
     const response = await artistAPI.get(
       `/analytics/plays?date=${date}&type=${type}`
@@ -78,4 +81,13 @@ export const getArtistPlayAnalytics = async (date: string, type: string = "month
   }
 };
 
-
+// Get monthly total analytics
+export const getMonthlyTotalAnalytics = async () => {
+  try {
+    const response = await adminAPI.get("analytics/monthly-total");
+    return response;
+  } catch (error) {
+    console.error("getMonthlyTotalAnalytics error:", error);
+    throw error;
+  }
+};

@@ -11,6 +11,8 @@ import Packages from "../../pages/admin/Packages";
 import Purchases from "../../pages/admin/Purchases";
 import Admins from "../../pages/admin/Admins";
 
+import CreatePackage from "../../pages/admin/form/CreatePackage";
+
 const AdminAppRoutes: FC = () => {
   return (
     <Router>
@@ -27,6 +29,7 @@ const AdminAppRoutes: FC = () => {
                 <Route path='/analysis-view' element={<Analysis />} />
                 <Route path='/genres' element={<Genres />} />
                 <Route path='/packages' element={<Packages />} />
+                <Route path='/packages/create' element={<CreatePackage />} />
                 <Route path='/purchases' element={<Purchases />} />
                 <Route path='/admins' element={<Admins />} />
               </Routes>
