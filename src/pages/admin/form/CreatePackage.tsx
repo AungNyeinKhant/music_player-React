@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -18,6 +18,9 @@ const validationSchema = Yup.object({
 
 const CreatePackage: React.FC = () => {
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   const formik = useFormik({
     initialValues: {
@@ -28,107 +31,162 @@ const CreatePackage: React.FC = () => {
     },
     validationSchema,
     onSubmit: async (values) => {
+      setIsLoading(true);
+      setError(null);
+      setSuccessMessage(null);
+      
       try {
         await createPackage({
           ...values,
           num_of_days: Number(values.num_of_days),
           price: Number(values.price),
         });
-        navigate("/admin/packages");
+        setSuccessMessage("Package created successfully!");
+        setTimeout(() => {
+          navigate("/admin/packages");
+        }, 1500);
       } catch (error) {
         console.error("Error creating package:", error);
+        setError("Failed to create package. Please try again.");
+      } finally {
+        setIsLoading(false);
       }
     },
   });
 
   return (
     <AdminDashboard>
-      <div className='p-6'>
-        <h1 className='text-2xl font-bold mb-6'>Create Package</h1>
-        <form onSubmit={formik.handleSubmit} className='max-w-lg'>
-          <div className='mb-4'>
-            <label htmlFor='name' className='block text-sm font-medium mb-1'>
-              Name *
+      <div className='bg-dashboard-primaryDark p-10 rounded-lg shadow-lg w-full'>
+        <h2 className='text-dashboard-primaryText text-2xl font-bold mb-6 text-center'>
+          Create New Package
+        </h2>
+
+        <form onSubmit={formik.handleSubmit} className='space-y-6'>
+          {/* Package Name Field */}
+          <div>
+            <label
+              htmlFor='name'
+              className='block text-dashboard-primaryText mb-2'
+            >
+              Package Name *
             </label>
             <input
               id='name'
+              name='name'
               type='text'
-              {...formik.getFieldProps("name")}
-              className='w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
+              placeholder='Enter package name'
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.name}
+              className='w-full px-4 py-2 rounded bg-dashboard-primary text-dashboard-primaryText border border-dashboard-primaryDarkText focus:outline-none focus:ring-2 focus:ring-dashboard-secondary'
             />
-            {formik.touched.name && formik.errors.name && (
-              <div className='text-red-500 text-sm mt-1'>
+            {formik.touched.name && formik.errors.name ? (
+              <div className='text-red-500 mt-1 text-sm'>
                 {formik.errors.name}
               </div>
-            )}
+            ) : null}
           </div>
 
-          <div className='mb-4'>
+          {/* Description Field */}
+          <div>
             <label
               htmlFor='description'
-              className='block text-sm font-medium mb-1'
+              className='block text-dashboard-primaryText mb-2'
             >
-              Description
+              Description (Optional)
             </label>
             <textarea
               id='description'
-              {...formik.getFieldProps("description")}
-              className='w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
+              name='description'
+              placeholder='Enter package description'
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.description}
               rows={4}
+              className='w-full px-4 py-2 rounded bg-dashboard-primary text-dashboard-primaryText border border-dashboard-primaryDarkText focus:outline-none focus:ring-2 focus:ring-dashboard-secondary'
             />
+            {formik.touched.description && formik.errors.description ? (
+              <div className='text-red-500 mt-1 text-sm'>
+                {formik.errors.description}
+              </div>
+            ) : null}
           </div>
 
-          <div className='mb-4'>
+          {/* Number of Days Field */}
+          <div>
             <label
               htmlFor='num_of_days'
-              className='block text-sm font-medium mb-1'
+              className='block text-dashboard-primaryText mb-2'
             >
               Number of Days *
             </label>
             <input
               id='num_of_days'
+              name='num_of_days'
               type='number'
-              {...formik.getFieldProps("num_of_days")}
-              className='w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
+              placeholder='Enter number of days'
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.num_of_days}
+              className='w-full px-4 py-2 rounded bg-dashboard-primary text-dashboard-primaryText border border-dashboard-primaryDarkText focus:outline-none focus:ring-2 focus:ring-dashboard-secondary'
             />
-            {formik.touched.num_of_days && formik.errors.num_of_days && (
-              <div className='text-red-500 text-sm mt-1'>
+            {formik.touched.num_of_days && formik.errors.num_of_days ? (
+              <div className='text-red-500 mt-1 text-sm'>
                 {formik.errors.num_of_days}
               </div>
-            )}
+            ) : null}
           </div>
 
-          <div className='mb-6'>
-            <label htmlFor='price' className='block text-sm font-medium mb-1'>
+          {/* Price Field */}
+          <div>
+            <label
+              htmlFor='price'
+              className='block text-dashboard-primaryText mb-2'
+            >
               Price *
             </label>
             <input
               id='price'
+              name='price'
               type='number'
-              {...formik.getFieldProps("price")}
-              className='w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
+              placeholder='Enter price'
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.price}
+              className='w-full px-4 py-2 rounded bg-dashboard-primary text-dashboard-primaryText border border-dashboard-primaryDarkText focus:outline-none focus:ring-2 focus:ring-dashboard-secondary'
             />
-            {formik.touched.price && formik.errors.price && (
-              <div className='text-red-500 text-sm mt-1'>
+            {formik.touched.price && formik.errors.price ? (
+              <div className='text-red-500 mt-1 text-sm'>
                 {formik.errors.price}
               </div>
-            )}
+            ) : null}
           </div>
 
-          <div className='flex gap-4'>
-            <button
-              type='submit'
-              className='px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500'
-            >
-              Create Package
-            </button>
-            <button
-              type='button'
-              onClick={() => navigate("/admin/packages")}
-              className='px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500'
-            >
-              Cancel
-            </button>
+          <div>
+            {error && (
+              <div className='text-red-500 text-center mb-4'>{error}</div>
+            )}
+            {successMessage && (
+              <div className='text-green-500 text-center mb-4'>
+                {successMessage}
+              </div>
+            )}
+            <div className="flex space-x-4">
+              <button
+                type='button'
+                onClick={() => navigate("/admin/packages")}
+                className='w-1/2 bg-gray-600 hover:bg-gray-700 text-dashboard-primaryText font-medium py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition duration-150 ease-in-out'
+              >
+                Cancel
+              </button>
+              <button
+                type='submit'
+                disabled={isLoading}
+                className='w-1/2 bg-dashboard-secondary hover:bg-opacity-90 text-dashboard-primaryText font-medium py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-dashboard-secondary transition duration-150 ease-in-out disabled:opacity-50'
+              >
+                {isLoading ? "Creating Package..." : "Create Package"}
+              </button>
+            </div>
           </div>
         </form>
       </div>

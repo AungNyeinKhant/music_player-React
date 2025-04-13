@@ -73,7 +73,7 @@ export const createPackage = async (packageData: {
   description: string;
 }): Promise<any> => {
   try {
-    const response = await adminAPI.post("/packages", packageData);
+    const response = await adminAPI.post("/packages/create", packageData);
     return response;
   } catch (error) {
     console.error("Error creating package:", error);

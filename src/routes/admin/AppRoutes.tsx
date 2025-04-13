@@ -12,6 +12,7 @@ import Purchases from "../../pages/admin/Purchases";
 import Admins from "../../pages/admin/Admins";
 
 import CreatePackage from "../../pages/admin/form/CreatePackage";
+import UpdatePackage from "../../pages/admin/form/UpdatePackage";
 
 const AdminAppRoutes: FC = () => {
   return (
@@ -30,6 +31,7 @@ const AdminAppRoutes: FC = () => {
                 <Route path='/genres' element={<Genres />} />
                 <Route path='/packages' element={<Packages />} />
                 <Route path='/packages/create' element={<CreatePackage />} />
+                <Route path='/packages/update/:id' element={<UpdatePackage />} />
                 <Route path='/purchases' element={<Purchases />} />
                 <Route path='/admins' element={<Admins />} />
               </Routes>

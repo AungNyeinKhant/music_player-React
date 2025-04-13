@@ -53,13 +53,13 @@ const AdminHeader: FC<{
 
         {isProfileOpen && (
           <div className='absolute right-0 mt-2 w-48 bg-dashboard-primaryDark rounded-md shadow-lg py-1 z-10'>
-            <button
+            {/* <button
               className='flex items-center w-full px-4 py-2 text-sm text-dashboard-primaryText hover:bg-dashboard-primary'
               onClick={() => navigate("/admin/profile")}
             >
               <User size={16} className='mr-2' />
               Profile
-            </button>
+            </button> */}
             <button
               className='flex items-center w-full px-4 py-2 text-sm text-dashboard-primaryText hover:bg-dashboard-primary'
               onClick={handleLogout}

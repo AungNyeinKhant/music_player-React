@@ -34,7 +34,8 @@ const Packages: FC = () => {
   };
 
   const handleEditPackage = (id: string) => {
-    alert(`Edit Package with ID: ${id}`);
+    
+    navigate(`/admin/packages/update/${id}`)
   };
 
   return (
@@ -72,7 +73,7 @@ const Packages: FC = () => {
                   <td className='px-4 py-2'>{pkg.name}</td>
                   <td className='px-4 py-2'>{pkg.num_of_days}</td>
                   <td className='px-4 py-2'>{pkg.description}</td>
-                  <td className='px-4 py-2'>${pkg.price}</td>
+                  <td className='px-4 py-2'>{pkg.price} MMK</td>
                   <td className='px-4 py-2'>
                     {new Date(pkg.created_at).toLocaleDateString()}
                   </td>
