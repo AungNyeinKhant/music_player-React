@@ -121,26 +121,6 @@ const AdminSidebar: FC<{ isSidebarOpen: boolean }> = ({ isSidebarOpen }) => {
               Purchases
             </Link>
           </li>
-          <li>
-            <Link
-              to='/admin/admins'
-              className={`flex items-center p-3 rounded-md ${
-                location.pathname === "/admin/admins"
-                  ? "bg-dashboard-primary text-dashboard-primaryText"
-                  : "hover:bg-dashboard-primary text-dashboard-primaryDarkText"
-              }`}
-            >
-              <Users
-                size={20}
-                className={`mr-3 ${
-                  location.pathname === "/admin/admins"
-                    ? "text-dashboard-secondary"
-                    : ""
-                }`}
-              />
-              Admins
-            </Link>
-          </li>
         </ul>
       </nav>
     </aside>

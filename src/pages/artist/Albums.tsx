@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { artistAlbumList } from "../../services/albumService";
+import { artistAlbumList, deleteAlbum } from "../../services/albumService";
 import Dashboard from "../../layouts/Dashboard";
 import { Plus, Trash2, Edit } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
@@ -42,10 +42,23 @@ const Albums: React.FC = () => {
     alert(`Album ID: ${id}`);
   };
 
-  const handleDelete = (e: React.MouseEvent, album: Album) => {
+  const handleDelete = async (e: React.MouseEvent, album: Album) => {
     e.stopPropagation(); // Prevent event bubbling
-    // Delete functionality to be implemented
-    console.log("Delete album:", album.id);
+    const isConfirmed = window.confirm(
+      `Are you sure you want to delete the album "${album.name}"?`
+    );
+
+    if (isConfirmed) {
+      try {
+        const response: any = await deleteAlbum(album.id);
+        if (response.data.success) {
+          setAlbums(albums.filter((a) => a.id !== album.id));
+        }
+      } catch (error) {
+        console.error("Failed to delete album:", error);
+        alert("Failed to delete the album. Please try again.");
+      }
+    }
   };
 
   return (
@@ -82,21 +95,23 @@ const Albums: React.FC = () => {
                 </h3>
                 <p className='text-dashboard-primaryDarkText text-sm mb-3'>
                   {album.description.length > 100
-                    ? album.description.slice(0, 100) + '...'
+                    ? album.description.slice(0, 100) + "..."
                     : album.description}
                 </p>
                 <div className='flex justify-between items-center'>
                   <span className='text-dashboard-primaryDarkText text-sm'>
                     Genre: {album.genre.name}
                   </span>
-                  <div className="flex space-x-2">
+                  <div className='flex space-x-2'>
                     <button
-                      onClick={() => navigate(`/artist/albums/update/${album.id}`)}
+                      onClick={() =>
+                        navigate(`/artist/albums/update/${album.id}`)
+                      }
                       className='p-2 bg-dashboard-secondary text-dashboard-primaryText rounded-full hover:bg-opacity-90 transition-colors'
                     >
                       <Edit className='w-4 h-4' />
                     </button>
-                    <button 
+                    <button
                       onClick={(e) => handleDelete(e, album)}
                       className='p-2 bg-red-500 text-dashboard-primaryText rounded-full hover:bg-opacity-90 transition-colors'
                     >

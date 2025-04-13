@@ -115,4 +115,55 @@ export const createTrack = async (trackData: {
     throw error;
   }
 };
+
+export const updateTrack = async (
+  trackId: string,
+  trackData: {
+    name?: string;
+    audio?: File;
+    genre_id?: string;
+    album_id?: string;
+    description?: string;
+  }
+) => {
+  try {
+    const formData = new FormData();
+    Object.entries(trackData).forEach(([key, value]) => {
+      if (value !== undefined) {
+        formData.append(key, value);
+      }
+    });
+
+    const response = await artistAPI.put(`/track/${trackId}`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    return response;
+  } catch (error) {
+    console.error("updateTrack error:", error);
+    throw error;
+  }
+};
+
+export const getTrackDetail = async (trackId: string) => {
+  try {
+    const response = await artistAPI.get(`/track/${trackId}`);
+    return response;
+  } catch (error) {
+    console.error("getTrackDetail error:", error);
+    throw error;
+  }
+};
+
+export const deleteTrack = async (trackId: string) => {
+  try {
+    const response = await artistAPI.delete(`/track/${trackId}`);
+    return response;
+  } catch (error) {
+    console.error("deleteTrack error:", error);
+    throw error;
+  }
+};
 // ==================== artist end =============================

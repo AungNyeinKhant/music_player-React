@@ -154,3 +154,13 @@ export const getAlbumDetail4Artist = async (id: string) => {
     throw error;
   }
 };
+
+export const deleteAlbum = async (albumId: string) => {
+  try {
+    const response = await artistAPI.delete(`/album/${albumId}`);
+    return response;
+  } catch (error) {
+    console.error("deleteAlbum error:", error);
+    throw error;
+  }
+};
