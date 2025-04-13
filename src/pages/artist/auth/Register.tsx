@@ -3,7 +3,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { Eye, EyeOff, Calendar } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { artistRegister } from "../../../services/AuthService";
+import { artistLogin, artistRegister } from "../../../services/AuthService";
 import { storeRefreshToken } from "../../../utils/crypto";
 import { useAuth } from "../../../context/AuthContext";
 
@@ -154,7 +154,15 @@ const Register: FC = () => {
           nrc_back: values.nrc_back || undefined,
         };
 
-        const response: any = await artistRegister(formData);
+        const res: any = await artistRegister(formData);
+
+        if (res.status === 400) {
+          const errorMessage = res?.data?.data?.error ?? "Something went wrong";
+          alert(errorMessage);
+          return;
+        }
+
+        const response = await artistLogin(values.email, values.password);
 
         if (response.status === 400) {
           const errorMessage =
