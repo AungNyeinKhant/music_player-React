@@ -16,7 +16,7 @@ const Login: FC = () => {
   const auth = useAuth();
 
   // Check for existing refresh token and attempt to refresh
-  useTokenRefresh('artist');
+  useTokenRefresh("artist");
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -51,11 +51,13 @@ const Login: FC = () => {
           return;
         }
 
-        storeRefreshToken("artist",response?.data?.data?.refreshToken);
+        storeRefreshToken("artist", response?.data?.data?.refreshToken);
 
         auth?.setUser({
           id: response?.data?.data?.user.id,
+          image: response.data.data.user.image,
           role: "artist",
+          name: response.data.data.user.name,
         });
 
         navigate("/artist");

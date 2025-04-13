@@ -1,9 +1,10 @@
 import { FC, useState } from "react";
-import { Search, Menu, User, Package, LogOut, ChevronDown } from "lucide-react";
+import { Search,Palette ,Music, Menu, User, Package, LogOut, ChevronDown } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { logout } from "../../services/AuthService";
 import Logo from "../../assets/image/music-player-logo.svg";
+import defaultProfileImage from "../../assets/image/no-profile.webp";
 
 type HeaderProps = {
   onSidebarOpen: () => void;
@@ -42,14 +43,30 @@ const Header: FC<HeaderProps> = ({ onSidebarOpen }) => {
 
       {/* Search Bar */}
       <div className='flex items-center flex-1 max-w-md mx-4'>
-        <div className='relative w-full'>
+        <form
+          className='relative w-full'
+          onSubmit={(e) => {
+            e.preventDefault();
+            const searchInput = e.currentTarget.querySelector("input");
+            if (searchInput && searchInput.value.trim()) {
+              navigate(
+                `/app/search?q=${encodeURIComponent(searchInput.value.trim())}`
+              );
+            }
+          }}
+        >
           <input
             type='text'
-            placeholder='Search...'
-            className='w-full py-2 pl-10 pr-4 text-sm bg-[#282828] text-primaryText rounded-full focus:outline-none focus:ring-1 focus:ring-secondary'
+            placeholder='Search tracks...'
+            className='w-full py-2 pl-7 pr-4 text-sm bg-[#282828] text-primaryText rounded-full focus:outline-none focus:ring-1 focus:ring-secondary'
           />
-          <Search className='absolute left-3 top-2.5 w-5 h-5 text-gray-400' />
-        </div>
+          <button
+            type='submit'
+            className='absolute right-3 top-1 p-1 hover:bg-[#383838] rounded-full transition-colors'
+          >
+            <Search className='w-5 h-5 text-gray-400' />
+          </button>
+        </form>
       </div>
 
       {/* User Profile */}
@@ -59,11 +76,13 @@ const Header: FC<HeaderProps> = ({ onSidebarOpen }) => {
           className='flex items-center space-x-2 p-2 rounded-md hover:bg-[#282828] transition-colors'
         >
           <img
-            src='https://github.com/shadcn.png'
-            alt='User'
-            className='w-8 h-8 rounded-full'
+            src={auth?.user?.image || defaultProfileImage}
+            alt={auth?.user?.name || "User"}
+            className='w-8 h-8 rounded-full object-cover'
           />
-          <span className='text-primaryText mx-2 hidden sm:block'>Taylor</span>
+          <span className='text-primaryText mx-2 hidden sm:block'>
+            {auth?.user?.name || "User"}
+          </span>
           <ChevronDown size={16} className='text-primaryText' />
         </button>
 
@@ -75,6 +94,13 @@ const Header: FC<HeaderProps> = ({ onSidebarOpen }) => {
             >
               <User size={16} className='mr-2' />
               Profile
+            </button>
+            <button
+              className='flex items-center w-full px-4 py-2 text-sm text-primaryText hover:bg-[#282828]'
+              onClick={() => window.location.href = "/artist/auth/register"}
+            >
+              <Music  size={16} className='mr-2' />
+              Register as artist
             </button>
             <button
               className='flex items-center w-full px-4 py-2 text-sm text-primaryText hover:bg-[#282828]'

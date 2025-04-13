@@ -92,11 +92,13 @@ const Register: FC = () => {
           return;
         }
 
-        storeRefreshToken("user",response?.data?.data?.refreshToken);
+        storeRefreshToken("user", response?.data?.data?.refreshToken);
 
         auth?.setUser({
           id: response?.data?.data?.user.id,
+          image: response.data.data.user.image,
           role: "user",
+          name: response.data.data.user.name,
         });
 
         navigate("/app");
@@ -311,7 +313,7 @@ const Register: FC = () => {
                 Already have an account?{" "}
               </span>
               <a
-                href='/customer/auth/login'
+                href='/login'
                 className='text-secondary hover:text-opacity-90'
               >
                 Sign In

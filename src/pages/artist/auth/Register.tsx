@@ -37,7 +37,7 @@ const Register: FC = () => {
     "image/svg+xml",
     "image/tiff",
     "image/webp",
-    "image/jfif"
+    "image/jfif",
   ];
   const FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
@@ -163,11 +163,13 @@ const Register: FC = () => {
           return;
         }
 
-        storeRefreshToken("artist",response?.data?.data?.refreshToken);
+        storeRefreshToken("artist", response?.data?.data?.refreshToken);
 
         auth?.setUser({
           id: response?.data?.data?.user.id,
+          image: response.data.data.user.image,
           role: "artist",
+          name: response.data.data.user.name,
         });
 
         navigate("/artist");

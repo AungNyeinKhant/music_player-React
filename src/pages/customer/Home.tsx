@@ -116,9 +116,11 @@ const Home: FC = () => {
               {recentPlayTracks
                 ? recentPlayTracks.map((track) => (
                     <div key={track.id} className='flex-none snap-start'>
-                      <MusicCard 
-                        track={track} 
-                        onClick={(track) => handleTrackClick(track, recentPlayTracks)}
+                      <MusicCard
+                        track={track}
+                        onClick={(track) =>
+                          handleTrackClick(track, recentPlayTracks)
+                        }
                       />
                     </div>
                   ))
@@ -151,10 +153,10 @@ const Home: FC = () => {
                         className='w-12 h-12 rounded object-cover'
                       />
                       <div className='ml-4'>
-                        <h4 className='text-primaryText text-sm'>
+                        <h4 className='text-primaryText text-left text-sm'>
                           {track.name}
                         </h4>
-                        <p className='text-gray-400 text-xs'>
+                        <p className='text-gray-400 text-left text-xs'>
                           {track?.artist?.name}
                         </p>
                       </div>
@@ -191,9 +193,11 @@ const Home: FC = () => {
               {mostPlayedTracks
                 ? mostPlayedTracks.map((track) => (
                     <div key={track.id} className='flex-none snap-start'>
-                      <MusicCard 
-                        track={track} 
-                        onClick={(track) => handleTrackClick(track, mostPlayedTracks)}
+                      <MusicCard
+                        track={track}
+                        onClick={(track) =>
+                          handleTrackClick(track, mostPlayedTracks)
+                        }
                       />
                     </div>
                   ))
@@ -216,19 +220,23 @@ const Home: FC = () => {
           </div>
           <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6'>
             {isLoading ? (
-              <div className="col-span-3 text-center text-gray-400 py-8">Loading popular albums...</div>
+              <div className='col-span-3 text-center text-gray-400 py-8'>
+                Loading popular albums...
+              </div>
             ) : playlists.length > 0 ? (
               playlists.map((playlist) => (
-                <PlaylistCard 
+                <PlaylistCard
                   onClick={() => {
                     navigate(`/app/album-detail/${playlist.id}`);
-                  }} 
-                  key={playlist.id} 
-                  playlist={playlist} 
+                  }}
+                  key={playlist.id}
+                  playlist={playlist}
                 />
               ))
             ) : (
-              <div className="col-span-3 text-center text-gray-400 py-8">No albums found</div>
+              <div className='col-span-3 text-center text-gray-400 py-8'>
+                No albums found
+              </div>
             )}
           </div>
         </div>

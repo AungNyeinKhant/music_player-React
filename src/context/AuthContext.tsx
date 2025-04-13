@@ -7,6 +7,8 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<UserAuth | null>({
     id: "",
     role: "",
+    image: "",
+    name: "",
   });
 
   // Create value object

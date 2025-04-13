@@ -1,20 +1,19 @@
 import { FC } from "react";
 import { useNavigate } from "react-router-dom";
-
-type Artist = {
-  id: string;
-  name: string;
-  image: string;
-  listen_count?: number;
-};
+import { Artist4User } from "../../types";
+import NoImage from "../../assets/image/no-album-image.svg";
 
 type ArtistCardProps = {
-  artist: Artist;
+  artist: Artist4User;
   size?: "small" | "medium" | "large";
   onClick: () => void;
 };
 
-const ArtistCard: FC<ArtistCardProps> = ({ artist,onClick, size = "medium" }) => {
+const ArtistCard: FC<ArtistCardProps> = ({
+  artist,
+  onClick,
+  size = "medium",
+}) => {
   const sizeClasses = {
     small: "w-32 h-32",
     medium: "w-48 h-48",
@@ -41,7 +40,7 @@ const ArtistCard: FC<ArtistCardProps> = ({ artist,onClick, size = "medium" }) =>
         className={`${sizeClasses[size]} rounded-lg overflow-hidden mx-auto relative`}
       >
         <img
-          src={artist.image}
+          src={artist.image || NoImage}
           alt={artist.name}
           className='w-full h-full object-cover transform transition-transform group-hover:scale-105'
         />
@@ -50,11 +49,11 @@ const ArtistCard: FC<ArtistCardProps> = ({ artist,onClick, size = "medium" }) =>
         <h3 className='text-primaryText font-semibold truncate'>
           {artist.name}
         </h3>
-        {artist.listen_count && (
+        {/* {artist.listen_count && (
           <p className='text-gray-400 text-sm truncate'>
             {formatListenCount(artist.listen_count)} listeners
           </p>
-        )}
+        )} */}
       </div>
     </div>
   );

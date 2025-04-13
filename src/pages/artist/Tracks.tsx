@@ -1,9 +1,9 @@
 import { FC, useState, useEffect } from "react";
 import { artistAlbumList } from "../../services/albumService";
-import { findTracksByAlbumId } from "../../services/trackService";
+import { deleteTrack, findTracksByAlbumId } from "../../services/trackService";
 import Dashboard from "../../layouts/Dashboard";
 import { Plus, Trash2 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Modal from "../../components/modal/Modal";
 import CreateTrack from "./form/CreateTrack";
 
@@ -37,6 +37,7 @@ type Album = {
 };
 
 const Tracks: FC = () => {
+  const navigate = useNavigate();
   const [selectedAlbum, setSelectedAlbum] = useState<string>("");
   const [showModal, setShowModal] = useState(false);
   const [tracks, setTracks] = useState<Track[]>([]);
@@ -47,8 +48,8 @@ const Tracks: FC = () => {
     const fetchAlbums = async () => {
       try {
         const response: any = await artistAlbumList();
-        if (response.success) {
-          setAlbums(response.data);
+        if (response.data.success) {
+          setAlbums(response.data.data);
         }
       } catch (error) {
         console.error("Error fetching albums:", error);
@@ -79,15 +80,17 @@ const Tracks: FC = () => {
   }, [selectedAlbum]);
 
   const handleRowClick = (id: string) => {
-    alert(`Track ID: ${id}`);
+    navigate(`/artist/track/update/${id}`);
   };
 
   const handleDelete = async (e: React.MouseEvent, track: Track) => {
     e.stopPropagation();
     if (window.confirm(`Do you want to delete ${track.name}?`)) {
       try {
-        // await artistAPI.delete(`/tracks/${track.id}`);
-        // setTracks(tracks.filter((t) => t.id !== track.id));
+        const response: any = await deleteTrack(track.id);
+        if (response.data.success) {
+          setTracks(tracks.filter((t) => t.id !== track.id));
+        }
       } catch (error) {
         console.error("Error deleting track:", error);
       }

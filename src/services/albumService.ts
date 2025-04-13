@@ -31,7 +31,7 @@ export const createAlbum = async (albumData: {
 export const artistAlbumList = async () => {
   try {
     const response = await artistAPI.get("/albums");
-    return response.data;
+    return response;
   } catch (error) {
     console.error("artistAlbumList error:", error);
     throw error;
@@ -41,7 +41,7 @@ export const artistAlbumList = async () => {
 export const artistGenre = async () => {
   try {
     const response = await artistAPI.get("/genres");
-    return response.data;
+    return response;
   } catch (error) {
     console.error("artistGenre error:", error);
     throw error;
@@ -98,9 +98,69 @@ export const userAlbumList = async ({
     const url = `/albums${queryString ? `?${queryString}` : ""}`;
 
     const response = await userAPI.get(url);
-    return response.data;
+    return response;
   } catch (error) {
     console.error("userAlbumList error:", error);
+    throw error;
+  }
+};
+export const getAlbumByArtistId = async (id: string) => {
+  try {
+    const response = await artistAPI.get(`/albums?artist_id=${id}`);
+    return response;
+  } catch (error) {
+    console.error("artistAlbumList error:", error);
+    throw error;
+  }
+};
+
+export const updateAlbum = async (
+  albumId: string,
+  albumData: {
+    name?: string;
+    description?: string;
+    genre_id?: string;
+    image?: File;
+  }
+) => {
+  try {
+    const formData = new FormData();
+    Object.entries(albumData).forEach(([key, value]) => {
+      if (value !== undefined) {
+        formData.append(key, value);
+      }
+    });
+
+    const response = await artistAPI.put(`/album/${albumId}`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    return response;
+  } catch (error) {
+    console.error("updateAlbum error:", error);
+    throw error;
+  }
+};
+
+export const getAlbumDetail4Artist = async (id: string) => {
+  try {
+    const response = await artistAPI.get(`/album/${id}`);
+    console.log(response);
+    return response;
+  } catch (error) {
+    console.error("getTracksByAlbumId error:", error);
+    throw error;
+  }
+};
+
+export const deleteAlbum = async (albumId: string) => {
+  try {
+    const response = await artistAPI.delete(`/album/${albumId}`);
+    return response;
+  } catch (error) {
+    console.error("deleteAlbum error:", error);
     throw error;
   }
 };
