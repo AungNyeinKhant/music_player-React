@@ -128,31 +128,30 @@ const Purchases: FC = () => {
                           <div className='absolute mt-2 w-32 bg-dashboard-primary border border-dashboard-secondary/20 rounded-md shadow-lg z-50 flex flex-col'>
                             <button
                               className='w-full px-4 py-2 text-sm text-green-800 hover:bg-dashboard-secondary/20 transition-colors text-left'
-                              onClick={async() =>{
-                                
-                                const response = await handleStatus(purchase.id)
-                                if(response.status === 200){
-                                  
-                                  purchase.status = "APPROVED"
-                                  setActiveDropdown(null)
+                              onClick={async () => {
+                                const response = await handleStatus(
+                                  purchase.id
+                                );
+                                if (response.status === 200) {
+                                  purchase.status = "APPROVED";
+                                  setActiveDropdown(null);
                                 }
-                              }
-                              }
+                              }}
                             >
                               APPROVED
                             </button>
                             <button
                               className='w-full px-4 py-2 text-sm text-red-800 hover:bg-dashboard-secondary/20 transition-colors text-left'
-                              onClick={async() =>{
-                                
-                                const response = await handleStatus(purchase.id,false)
-                                if(response.status === 200){
-                                  
-                                  purchase.status = "REJECTED"
-                                  setActiveDropdown(null)
+                              onClick={async () => {
+                                const response = await handleStatus(
+                                  purchase.id,
+                                  true
+                                );
+                                if (response.status === 200) {
+                                  purchase.status = "REJECTED";
+                                  setActiveDropdown(null);
                                 }
-                              }
-                              }
+                              }}
                             >
                               REJECTED
                             </button>

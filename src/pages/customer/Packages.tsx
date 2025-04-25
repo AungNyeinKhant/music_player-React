@@ -72,6 +72,18 @@ const Packages = () => {
           Extend your subscription or get a new one to continue enjoying our
           services
         </p>
+        <br />
+        <p className='text-primaryDarkText'>
+          Please transfer the payment to the following account: <br />
+          Kpay -{" "}
+          <b className='text-secondary'>+959 988 100 674 (Aung Nyein Khant)</b>
+          <br />
+          Kasikorn bank(K+) -{" "}
+          <b className='text-secondary'>
+            +66 642 398 423 (Mr. Aung Nyein Khant)
+          </b>
+          <br />
+        </p>
       </div>
 
       <div className='min-h-[calc(50vh-8rem)] grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8'>

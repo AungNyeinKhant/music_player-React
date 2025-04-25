@@ -17,7 +17,7 @@ export const handleStatus = async (
   try {
     const response = await adminAPI.post(`/purchase/handle`, {
       purchase_id: purchaseId,
-      reject,
+      reject: reject ? reject : false,
     });
     return response;
   } catch (error) {

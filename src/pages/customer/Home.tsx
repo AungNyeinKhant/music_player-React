@@ -108,7 +108,7 @@ const Home: FC = () => {
               href='#'
               className='text-gray-400 text-sm hover:text-primaryText'
             >
-              See all
+              {/* See all */}
             </a>
           </div>
           <div className='relative w-full'>
@@ -215,7 +215,7 @@ const Home: FC = () => {
               href='#'
               className='text-sm text-gray-400 hover:text-primaryText'
             >
-              See all
+              {/* See all */}
             </a>
           </div>
           <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6'>
