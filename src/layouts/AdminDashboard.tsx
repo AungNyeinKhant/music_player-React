@@ -1,10 +1,27 @@
-import { FC, ReactNode, useState } from "react";
+import { FC, ReactNode, useState, useEffect } from "react";
 import AdminHeader from "../components/header/AdminHeader";
 import AdminSidebar from "../components/sidebar/AdminSidebar";
+import { useSocket } from "../context/SocketContext";
 
 const AdminDashboard: FC<{ children: ReactNode }> = ({ children }) => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const { on, off } = useSocket();
+
+  useEffect(() => {
+    on(
+      "new_purchase",
+      (notification: { packageName: string; price: number }) => {
+        alert(
+          `New Purchase for ${notification.packageName} with price ${notification.price} MMK. Please check Purchases`
+        );
+      }
+    );
+
+    return () => {
+      off("new_purchase");
+    };
+  }, [on, off]);
 
   return (
     <div className='flex flex-col h-screen bg-dashboard-primary text-dashboard-primaryText'>

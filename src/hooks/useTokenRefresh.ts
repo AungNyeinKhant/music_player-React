@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { getRefreshToken, clearRefreshToken } from "../utils/crypto";
 import { userAPI, artistAPI, adminAPI } from "../services/httpService";
+import socketService from "../services/socketService";
 
 type Role = "user" | "artist" | "admin";
 
@@ -23,9 +24,15 @@ export const useTokenRefresh = (role: Role) => {
         });
 
         if (response?.data?.data?.accessToken) {
+          const accessToken = response.data.data.accessToken;
           api.defaults.headers.common[
             "Authorization"
-          ] = `Bearer ${response.data.data.accessToken}`;
+          ] = `Bearer ${accessToken}`;
+
+          // Set WebSocket authentication token
+
+          socketService.setAuthToken(accessToken);
+          socketService.connect(role);
 
           // Set user in auth context
 
@@ -48,6 +55,10 @@ export const useTokenRefresh = (role: Role) => {
         const api =
           role === "user" ? userAPI : role === "artist" ? artistAPI : adminAPI;
         api.defaults.headers.common["Authorization"] = "";
+        // Clear WebSocket authentication token
+        if (role === "user" || role === "admin") {
+          socketService.setAuthToken(null);
+        }
       }
     };
 

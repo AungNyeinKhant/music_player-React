@@ -1,6 +1,7 @@
 import { AuthContextType } from "../types";
 import { adminAPI, artistAPI, userAPI } from "./httpService";
-import { getRefreshToken } from "../utils/crypto";
+
+import socketService from "./socketService";
 
 //========================= user =========================
 
@@ -10,11 +11,12 @@ export const userLogin = async (email: string, password: string) => {
       email,
       password,
     });
-    
 
-    userAPI.defaults.headers.common[
-      "Authorization"
-    ] = `Bearer ${response?.data?.data?.accessToken}`;
+    const token = `Bearer ${response?.data?.data?.accessToken}`;
+    userAPI.defaults.headers.common["Authorization"] = token;
+
+    // Set socket authentication header
+    socketService.setAuthToken(token);
     return response;
   } catch (error) {
     console.error("userLogin error:", error);
@@ -43,11 +45,11 @@ export const userRegister = async (userData: {
         "Content-Type": "multipart/form-data",
       },
     });
-    
 
     userAPI.defaults.headers.common[
       "Authorization"
     ] = `Bearer ${response?.data?.data?.accessToken}`;
+    socketService.connect("user");
     return response;
   } catch (error) {
     console.error("userRegister error:", error);
@@ -91,7 +93,7 @@ export const artistRegister = async (artistData: {
       }
     });
 
-    const response:any = await artistAPI.post("/auth/register", formData, {
+    const response: any = await artistAPI.post("/auth/register", formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
@@ -115,9 +117,13 @@ export const adminLogin = async (email: string, password: string) => {
       email,
       password,
     });
-    adminAPI.defaults.headers.common[
-      "Authorization"
-    ] = `Bearer ${response?.data?.data?.accessToken}`;
+
+    const token = `Bearer ${response?.data?.data?.accessToken}`;
+    adminAPI.defaults.headers.common["Authorization"] = token;
+
+    // Set socket authentication header
+    socketService.setAuthToken(token);
+    socketService.connect("admin");
     return response;
   } catch (error) {
     console.error("adminLogin error:", error);
@@ -145,7 +151,7 @@ export const adminRegister = async (adminData: {
         "Content-Type": "multipart/form-data",
       },
     });
-    
+
     return response;
   } catch (error) {
     console.error("adminRegister error:", error);
@@ -153,13 +159,11 @@ export const adminRegister = async (adminData: {
   }
 };
 
-export const logout = (auth:AuthContextType | null) =>{
+export const logout = (auth: AuthContextType | null) => {
+  localStorage.removeItem(`${auth?.user?.role}RefreshToken`);
 
-    localStorage.removeItem(`${auth?.user?.role}RefreshToken`);
-  
-  
   auth?.setUser(null);
   userAPI.defaults.headers.common["Authorization"] = "";
-  artistAPI.defaults.headers.common["Authorization"] = ""
-  adminAPI.defaults.headers.common["Authorization"] = ""
-}
+  artistAPI.defaults.headers.common["Authorization"] = "";
+  adminAPI.defaults.headers.common["Authorization"] = "";
+};
