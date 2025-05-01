@@ -49,7 +49,7 @@ export const userRegister = async (userData: {
     userAPI.defaults.headers.common[
       "Authorization"
     ] = `Bearer ${response?.data?.data?.accessToken}`;
-    socketService.connect("user");
+    // socketService.connect("user");
     return response;
   } catch (error) {
     console.error("userRegister error:", error);
@@ -123,7 +123,7 @@ export const adminLogin = async (email: string, password: string) => {
 
     // Set socket authentication header
     socketService.setAuthToken(token);
-    socketService.connect("admin");
+    // socketService.connect("admin");
     return response;
   } catch (error) {
     console.error("adminLogin error:", error);

@@ -38,7 +38,7 @@ export type SidebarItem = {
 
 export type UserAuth = {
   id: string;
-  role: string;
+  role: "user" | "admin" | "artist" | "";
   image?: string;
   name: string;
 };

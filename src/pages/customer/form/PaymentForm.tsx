@@ -1,7 +1,5 @@
 import { FC, useState, useEffect } from "react";
 import { purchasePackage } from "../../../services/packageService";
-import { useSocket } from "../../../context/SocketContext";
-import { useAuth } from "../../../context/AuthContext";
 
 interface PaymentFormProps {
   packageId: string;
@@ -16,42 +14,6 @@ const PaymentForm: FC<PaymentFormProps> = ({
 }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string>("");
-  const { on, off } = useSocket();
-  const auth = useAuth();
-
-  useEffect(() => {
-    let isSubscribed = false;
-    
-    if (auth?.user?.id) {
-      isSubscribed = true;
-      const eventName = `purchase_status_${auth.user.id}`;
-      
-      // Listen for purchase status updates
-      on(eventName, (status: string) => {
-        if (!isSubscribed) return;
-        
-        if (status === "approved") {
-          alert(
-            "Your payment has been approved! Your subscription is now active."
-          );
-        } else if (status === "rejected") {
-          alert(
-            "Your payment has been rejected. Please try again or contact support."
-          );
-        }
-      });
-
-      // Cleanup function
-      return () => {
-        isSubscribed = false;
-        off(eventName);
-      };
-    }
-
-    return () => {
-      isSubscribed = false;
-    };
-  }, [auth?.user, on, off]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

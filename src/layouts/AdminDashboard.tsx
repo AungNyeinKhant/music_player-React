@@ -9,14 +9,14 @@ const AdminDashboard: FC<{ children: ReactNode }> = ({ children }) => {
   const { on, off } = useSocket();
 
   useEffect(() => {
-    on(
-      "new_purchase",
-      (notification: { packageName: string; price: number }) => {
-        alert(
-          `New Purchase for ${notification.packageName} with price ${notification.price} MMK. Please check Purchases`
-        );
-      }
-    );
+    console.log("Listening for new purchase notifications...");
+    on("new_purchase", (notification: any) => {
+      //{ packageName: string; price: number }
+
+      alert(
+        `New Purchase for ${notification.packageName} with price ${notification.price} MMK. Please check Purchases`
+      );
+    });
 
     return () => {
       off("new_purchase");

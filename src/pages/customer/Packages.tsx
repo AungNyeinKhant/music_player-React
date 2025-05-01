@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { getPackages } from "../../services/packageService";
 import Modal from "../../components/modal/Modal";
 import PaymentForm from "./form/PaymentForm";
+import { useSocket } from "../../context/SocketContext";
+import { useAuth } from "../../context/AuthContext";
 
 interface Package {
   id: string;
@@ -21,6 +23,8 @@ const Packages = () => {
   const [error, setError] = useState<string | null>(null);
   const [showModal, setShowModal] = useState(false);
   const [selectedPackage, setSelectedPackage] = useState<Package | null>(null);
+  const { on, off } = useSocket();
+  const auth = useAuth();
 
   useEffect(() => {
     const fetchPackages = async () => {
@@ -37,6 +41,30 @@ const Packages = () => {
 
     fetchPackages();
   }, []);
+
+  useEffect(() => {
+    if (auth?.user?.id) {
+      const eventName = `purchase_status`;
+      console.log("Listening for purchase status updates...");
+      // Listen for purchase status updates
+      on(eventName, (status: { status: string }) => {
+        if (status.status === "APPROVED") {
+          alert(
+            "Your payment has been approved! Your subscription is now active."
+          );
+        } else if (status.status === "REJECTED") {
+          alert(
+            "Your payment has been rejected. Please provide correct transition screenshot."
+          );
+        }
+      });
+
+      // Cleanup function
+      return () => {
+        off(eventName);
+      };
+    }
+  }, [auth?.user, on, off]);
 
   if (loading) {
     return (

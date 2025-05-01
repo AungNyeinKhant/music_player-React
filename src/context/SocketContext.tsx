@@ -26,17 +26,18 @@ interface SocketProviderProps {
 export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
   const auth = useAuth();
 
-  // useEffect(() => {
-  //   if (auth?.user?.id) {
-  //     socketService.connect();
-  //     console.log("socket connected");
-  //     // Cleanup on unmount
-  //     return () => {
-  //       socketService.disconnect();
-  //       console.log("socket disconnected");
-  //     };
-  //   }
-  // }, [auth?.user]);
+  useEffect(() => {
+    if (auth?.user?.id && auth?.user?.role) {
+      console.log("Connecting to socket with role:", auth.user.role);
+      socketService.connect(auth.user.role);
+      console.log("socket connected");
+      // Cleanup on unmount
+      return () => {
+        socketService.disconnect();
+        console.log("socket disconnected");
+      };
+    }
+  }, [auth?.user]);
 
   const value: SocketContextType = {
     isConnected: !!socketService.getSocket()?.connected,

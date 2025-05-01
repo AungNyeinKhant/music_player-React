@@ -32,7 +32,6 @@ export const useTokenRefresh = (role: Role) => {
           // Set WebSocket authentication token
 
           socketService.setAuthToken(accessToken);
-          socketService.connect(role);
 
           // Set user in auth context
 
